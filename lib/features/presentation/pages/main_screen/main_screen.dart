@@ -15,6 +15,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  // ignore: unused_field
   int _currentIndex = 0;
   late PageController pageController;
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hmsi_app/features/presentation/pages/credential/welcome_page.dart';
 import 'package:hmsi_app/features/presentation/pages/main_screen/main_screen.dart';
 
 import 'on_generate_route.dart';
@@ -21,7 +20,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         "/": (context) {
-          return MainScreen();
+          return const MainScreen();
         }
       },
     );
