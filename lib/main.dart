@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hmsi_app/features/presentation/pages/credential/welcome_page.dart';
+import 'package:hmsi_app/features/presentation/pages/main_screen/main_screen.dart';
+
+import 'on_generate_route.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,10 +14,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'HMSI App',
       debugShowCheckedModeBanner: false,
-      home: WelcomePage(),
+      onGenerateRoute: OnGenerateRoute.route,
+      initialRoute: '/',
+      routes: {
+        "/": (context) {
+          return MainScreen();
+        }
+      },
     );
   }
 }

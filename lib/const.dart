@@ -22,3 +22,10 @@ Widget sizeVer(double height) {
 Widget sizeHor(double width) {
   return SizedBox(width: width);
 }
+
+// Page Route
+class PageConst {
+  static const String welcomePage = 'welcomePage';
+  static const String signInPage = 'signInPage';
+  static const String signUpPage = 'signUpPage';
+}

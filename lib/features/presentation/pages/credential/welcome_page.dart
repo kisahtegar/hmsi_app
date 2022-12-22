@@ -36,14 +36,26 @@ class WelcomePage extends StatelessWidget {
                 text: "Sign In",
                 btnColor: Colors.black,
                 textColor: Colors.white,
-                onTapListener: () {},
+                onTapListener: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    PageConst.signInPage,
+                    (route) => false,
+                  );
+                },
               ),
               sizeVer(8),
               ButtonContainerWidget(
                 text: "Sign Up",
                 btnColor: Colors.white,
                 textColor: Colors.black,
-                onTapListener: () {},
+                onTapListener: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    PageConst.signUpPage,
+                    (route) => false,
+                  );
+                },
               ),
             ],
           ),
