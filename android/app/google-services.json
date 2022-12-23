@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "322360016774",
+    "project_id": "hmsi-app",
+    "storage_bucket": "hmsi-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:322360016774:android:4fc5ac43c24509d8263607",
+        "android_client_info": {
+          "package_name": "com.example.hmsi_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "322360016774-htp8qm1aq4cmmcn1pk5os0759aga1fn9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZUXLUUpCJFjYYgVowrJFEPgX6_NMw8NU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "322360016774-htp8qm1aq4cmmcn1pk5os0759aga1fn9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
