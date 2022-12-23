@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 // Color
 const backGroundColor = Colors.white;
@@ -21,4 +22,27 @@ Widget sizeVer(double height) {
 
 Widget sizeHor(double width) {
   return SizedBox(width: width);
+}
+
+// Page Route
+class PageConst {
+  static const String welcomePage = 'welcomePage';
+  static const String signInPage = 'signInPage';
+  static const String signUpPage = 'signUpPage';
+}
+
+class FirebaseConst {
+  static const String users = 'users';
+}
+
+void toast(String message) {
+  Fluttertoast.showToast(
+    msg: message,
+    toastLength: Toast.LENGTH_SHORT,
+    gravity: ToastGravity.BOTTOM,
+    timeInSecForIosWeb: 1,
+    backgroundColor: blueColor,
+    textColor: Colors.white,
+    fontSize: 16.0,
+  );
 }
