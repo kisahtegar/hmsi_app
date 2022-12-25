@@ -37,7 +37,8 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         userCollection.doc(uid).update(newUser);
       }
     }).catchError((error) {
-      debugPrint("[FirebaseRemoteDataSourceImpl]createUser: Some error occur!");
+      debugPrint(
+          "[FirebaseRemoteDataSourceImpl]createUser: Some error occur! ($error)");
     });
   }
 

@@ -8,7 +8,8 @@ import 'package:hmsi_app/features/presentation/pages/news/news_page.dart';
 import 'package:hmsi_app/features/presentation/pages/profile/profile_page.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final String uid;
+  const MainScreen({super.key, required this.uid});
 
   @override
   State<MainScreen> createState() => _MainScreenState();

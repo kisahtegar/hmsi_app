@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hmsi_app/const.dart';
+
+import '../../cubits/auth/auth_cubit.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -22,7 +25,9 @@ class ProfilePage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 10.0),
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                _openModalBottomSheet(context);
+              },
               child: const Icon(
                 Icons.menu,
                 color: primaryColor,
@@ -74,6 +79,61 @@ class ProfilePage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Future<dynamic> _openModalBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Container(
+          height: 125,
+          decoration: const BoxDecoration(
+            color: backGroundColor,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15.0),
+            child: Column(
+              children: [
+                const Text(
+                  "More Options",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: primaryColor,
+                  ),
+                ),
+                sizeHor(15),
+                const Divider(thickness: 1, color: Colors.black),
+                ListTile(
+                  onTap: () {
+                    BlocProvider.of<AuthCubit>(context).loggedOut();
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      PageConst.welcomePage,
+                      (route) => false,
+                    );
+                  },
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                  leading: const Icon(
+                    Icons.exit_to_app,
+                    color: Colors.black,
+                  ),
+                  title: const Text(
+                    "Logout",
+                    style: TextStyle(color: Colors.black, fontSize: 17),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
