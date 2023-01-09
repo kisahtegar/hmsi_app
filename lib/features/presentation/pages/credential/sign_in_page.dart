@@ -34,7 +34,7 @@ class _SignInPageState extends State<SignInPage> {
     debugPrint("SignInPage[build]: Building!!");
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: backGroundColor,
+      backgroundColor: AppColor.backGroundColor,
       body: BlocConsumer<CredentialCubit, CredentialState>(
         listener: (context, credentialState) {
           if (credentialState is CredentialSuccess) {
@@ -85,7 +85,7 @@ class _SignInPageState extends State<SignInPage> {
               ),
             ),
           ),
-          sizeVer(size.height * 0.02),
+          AppSize.sizeVer(size.height * 0.02),
 
           // Column of text, box, button
           Padding(
@@ -96,13 +96,13 @@ class _SignInPageState extends State<SignInPage> {
                 Text.rich(
                   TextSpan(
                     text: "Welcome Back",
-                    style: kTitleTextStyle.copyWith(
+                    style: AppTextStyle.kTitleTextStyle.copyWith(
                       fontSize: size.height * 0.05,
                     ),
                     children: <TextSpan>[
                       TextSpan(
                         text: "\nLogin to your account",
-                        style: kSubTextStyle.copyWith(
+                        style: AppTextStyle.kSubTextStyle.copyWith(
                           fontWeight: FontWeight.w400,
                           fontSize: size.height * 0.018,
                         ),
@@ -111,7 +111,7 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                sizeVer(size.height * 0.05),
+                AppSize.sizeVer(size.height * 0.05),
 
                 // E-Mail
                 FormContainerWidget(
@@ -119,7 +119,7 @@ class _SignInPageState extends State<SignInPage> {
                   iconsField: Icons.person,
                   hintText: "Username / E-Mail",
                 ),
-                sizeVer(size.height * 0.01),
+                AppSize.sizeVer(size.height * 0.01),
 
                 // Password
                 FormContainerWidget(
@@ -128,7 +128,7 @@ class _SignInPageState extends State<SignInPage> {
                   hintText: "Password",
                   isPasswordField: true,
                 ),
-                sizeVer(size.height * 0.26),
+                AppSize.sizeVer(size.height * 0.26),
 
                 // Login Button
                 _loading == true
@@ -143,15 +143,15 @@ class _SignInPageState extends State<SignInPage> {
                           _signInUser();
                         },
                       ),
-                sizeVer(size.height * 0.02),
+                AppSize.sizeVer(size.height * 0.02),
 
                 // Navigator to SignUpPage
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       "Don't have and account? ",
-                      style: TextStyle(color: primaryColor),
+                      style: TextStyle(color: AppColor.primaryColor),
                     ),
                     InkWell(
                       onTap: () {

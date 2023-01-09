@@ -17,6 +17,8 @@ import 'package:hmsi_app/features/domain/usecases/user/sign_up_user_usecase.dart
 import 'package:hmsi_app/features/domain/usecases/user/update_user_usecase.dart';
 import 'package:hmsi_app/features/presentation/cubits/auth/auth_cubit.dart';
 import 'package:hmsi_app/features/presentation/cubits/credential/credential_cubit.dart';
+import 'package:hmsi_app/features/presentation/cubits/user/get_single_other_user/get_single_other_user_cubit.dart';
+import 'package:hmsi_app/features/presentation/cubits/user/get_single_user/get_single_user_cubit.dart';
 import 'package:hmsi_app/features/presentation/cubits/user/user_cubit.dart';
 
 final sl = GetIt.instance;
@@ -48,6 +50,13 @@ Future<void> init() async {
       updateUserUseCase: sl.call(),
     ),
   );
+
+  // GetSingleUserCubit
+  sl.registerFactory(() => GetSingleUserCubit(getSingleUserUseCase: sl.call()));
+
+  // GetSingleOtherUserCubit
+  sl.registerFactory(
+      () => GetSingleOtherUserCubit(getSingleOtherUserUseCase: sl.call()));
 
   // !-- Use Cases --!
 

@@ -1,25 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hmsi_app/const.dart';
+import 'package:hmsi_app/features/domain/entities/user/user_entity.dart';
 
 import '../../cubits/auth/auth_cubit.dart';
+import '../../cubits/credential/credential_cubit.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+class ProfilePage extends StatefulWidget {
+  final UserEntity currentUser;
+  const ProfilePage({super.key, required this.currentUser});
 
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     debugPrint("ProfilePage[build]: Building!!");
+    debugPrint("ProfilePage[build]: currentUser(${widget.currentUser})");
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: backGroundColor,
+      backgroundColor: AppColor.backGroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        title: const Text(
+        title: Text(
           "Profile",
-          style: TextStyle(color: primaryColor, fontSize: 25),
+          style: TextStyle(color: AppColor.primaryColor, fontSize: 25),
         ),
         actions: [
           Padding(
@@ -28,9 +37,9 @@ class ProfilePage extends StatelessWidget {
               onTap: () {
                 _openModalBottomSheet(context);
               },
-              child: const Icon(
+              child: Icon(
                 Icons.menu,
-                color: primaryColor,
+                color: AppColor.primaryColor,
               ),
             ),
           )
@@ -48,34 +57,29 @@ class ProfilePage extends StatelessWidget {
                   Container(
                     height: size.height * 0.16,
                     width: size.width * 0.5,
-                    decoration: const BoxDecoration(
-                      color: secondaryColor,
+                    decoration: BoxDecoration(
+                      color: AppColor.secondaryColor,
                       shape: BoxShape.circle,
                     ),
                   ),
-                  sizeVer(10),
+                  AppSize.sizeVer(10),
                   Text(
-                    "Username",
-                    style: kTitleTextStyle.copyWith(fontSize: 25),
+                    "Kisah Tegar Putra Abdi",
+                    style: AppTextStyle.kTitleTextStyle.copyWith(fontSize: 23),
+                  ),
+                  AppSize.sizeVer(5),
+                  SizedBox(
+                    width: 200,
+                    height: 65,
+                    child: Text(
+                      "Title Lorem ipsum dolor sit amet, consectetur adipiscing elits wkwkwk wdawd wsadxmlw manda wddpsamiiii",
+                      style: AppTextStyle.kDescTextStyle,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ],
               ),
             ),
-            sizeVer(20),
-
-            // Biodata
-            Column(
-              children: const [
-                Text(
-                  "Details",
-                  style: TextStyle(
-                    color: primaryColor,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              ],
-            )
           ],
         ),
       ),
@@ -88,10 +92,10 @@ class ProfilePage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       builder: (context) {
         return Container(
-          height: 125,
-          decoration: const BoxDecoration(
-            color: backGroundColor,
-            borderRadius: BorderRadius.only(
+          height: 180,
+          decoration: BoxDecoration(
+            color: AppColor.backGroundColor,
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(30),
               topRight: Radius.circular(30),
             ),
@@ -100,19 +104,42 @@ class ProfilePage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 15.0),
             child: Column(
               children: [
-                const Text(
+                // Title
+                Text(
                   "More Options",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: primaryColor,
+                    color: AppColor.primaryColor,
                   ),
                 ),
-                sizeHor(15),
+                AppSize.sizeHor(15),
                 const Divider(thickness: 1, color: Colors.black),
+                // EditProfilePage Button
+                ListTile(
+                  onTap: () {
+                    Navigator.popAndPushNamed(
+                      context,
+                      PageConst.editProfilePage,
+                      arguments: widget.currentUser,
+                    );
+                  },
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                  leading: const Icon(
+                    Icons.mode_edit,
+                    color: Colors.black,
+                  ),
+                  title: const Text(
+                    "Edit Profile",
+                    style: TextStyle(color: Colors.black, fontSize: 17),
+                  ),
+                ),
+                // SignOut Button
                 ListTile(
                   onTap: () {
                     BlocProvider.of<AuthCubit>(context).loggedOut();
+                    BlocProvider.of<CredentialCubit>(context)
+                        .initialCredential();
                     Navigator.pushNamedAndRemoveUntil(
                       context,
                       PageConst.welcomePage,

@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hmsi_app/const.dart';
-import 'package:hmsi_app/features/presentation/pages/chat/chat_page.dart';
-import 'package:hmsi_app/features/presentation/pages/home/home_page.dart';
-import 'package:hmsi_app/features/presentation/pages/news/news_page.dart';
-import 'package:hmsi_app/features/presentation/pages/profile/profile_page.dart';
+
+import '../../../../const.dart';
+import '../../cubits/user/get_single_user/get_single_user_cubit.dart';
+import '../notification/notification_page.dart';
+import '../home/home_page.dart';
+import '../article/article_page.dart';
+import '../profile/profile_page.dart';
 
 class MainScreen extends StatefulWidget {
   final String uid;
@@ -16,12 +19,12 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  // ignore: unused_field
   int _currentIndex = 0;
   late PageController pageController;
 
   @override
   void initState() {
+    BlocProvider.of<GetSingleUserCubit>(context).getSingleUser(uid: widget.uid);
     pageController = PageController();
     super.initState();
   }
@@ -44,58 +47,82 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: backGroundColor,
-      body: PageView(
-        controller: pageController,
-        onPageChanged: onPageChanged,
-        children: const [
-          HomePage(),
-          NewsPage(),
-          ChatPage(),
-          ProfilePage(),
-        ],
-      ),
-      bottomNavigationBar: CupertinoTabBar(
-        onTap: navigationTapped,
-        backgroundColor: Colors.white,
-        inactiveColor: primaryColor,
-        activeColor: primaryColor,
-        items: const [
-          BottomNavigationBarItem(
-            label: "Home",
-            icon: FaIcon(
-              FontAwesomeIcons.house,
-              color: primaryColor,
-              size: 20,
+    return BlocBuilder<GetSingleUserCubit, GetSingleUserState>(
+      builder: (context, getSingleUserState) {
+        if (getSingleUserState is GetSingleUserLoaded) {
+          final currentUser = getSingleUserState.user;
+          return Scaffold(
+            backgroundColor: AppColor.backGroundColor,
+            body: ScrollConfiguration(
+              behavior:
+                  const MaterialScrollBehavior().copyWith(overscroll: false),
+              child: PageView(
+                controller: pageController,
+                onPageChanged: onPageChanged,
+                children: [
+                  HomePage(currentUser: currentUser),
+                  const ArticlePage(),
+                  const NotificationPage(),
+                  ProfilePage(currentUser: currentUser),
+                ],
+              ),
             ),
-          ),
-          BottomNavigationBarItem(
-            label: "News",
-            icon: FaIcon(
-              FontAwesomeIcons.newspaper,
-              color: primaryColor,
-              size: 20,
+            bottomNavigationBar: CupertinoTabBar(
+              onTap: navigationTapped,
+              backgroundColor: Colors.white,
+              inactiveColor: AppColor.primaryColor,
+              activeColor: AppColor.primaryColor,
+              items: [
+                BottomNavigationBarItem(
+                  label: "Home",
+                  icon: FaIcon(
+                    FontAwesomeIcons.houseChimney,
+                    color: _currentIndex == 0
+                        ? AppColor.primaryColor
+                        : AppColor.secondaryColor,
+                    size: 20,
+                  ),
+                ),
+                BottomNavigationBarItem(
+                  label: "Article",
+                  icon: FaIcon(
+                    FontAwesomeIcons.newspaper,
+                    color: _currentIndex == 1
+                        ? AppColor.primaryColor
+                        : AppColor.secondaryColor,
+                    size: 20,
+                  ),
+                ),
+                BottomNavigationBarItem(
+                  label: "Notifications",
+                  icon: FaIcon(
+                    FontAwesomeIcons.bell,
+                    color: _currentIndex == 2
+                        ? AppColor.primaryColor
+                        : AppColor.secondaryColor,
+                    size: 20,
+                  ),
+                ),
+                BottomNavigationBarItem(
+                  label: "Profile",
+                  icon: FaIcon(
+                    FontAwesomeIcons.idBadge,
+                    color: _currentIndex == 3
+                        ? AppColor.primaryColor
+                        : AppColor.secondaryColor,
+                    size: 20,
+                  ),
+                ),
+              ],
             ),
-          ),
-          BottomNavigationBarItem(
-            label: "Chat",
-            icon: FaIcon(
-              FontAwesomeIcons.message,
-              color: primaryColor,
-              size: 20,
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: "Profile",
-            icon: FaIcon(
-              FontAwesomeIcons.idBadge,
-              color: primaryColor,
-              size: 20,
-            ),
-          ),
-        ],
-      ),
+          );
+        }
+        // Loading Page
+        return Scaffold(
+          backgroundColor: AppColor.backGroundColor,
+          body: const Center(child: CircularProgressIndicator()),
+        );
+      },
     );
   }
 }

@@ -9,7 +9,7 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backGroundColor,
+      backgroundColor: AppColor.backGroundColor,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
         child: Center(
@@ -20,18 +20,18 @@ class WelcomePage extends StatelessWidget {
                 'assets/images/hmsi-logo.png',
                 width: 250,
               ),
-              sizeVer(30),
-              const Text(
+              AppSize.sizeVer(30),
+              Text(
                 "Welcome to HMSI",
-                style: kTitleTextStyle,
+                style: AppTextStyle.kTitleTextStyle,
               ),
-              sizeVer(15),
-              const Text(
+              AppSize.sizeVer(15),
+              Text(
                 "Selamat Datang di HMSI Apps\ntempat dimana Informasi, event,\n acara dan lain-lain disini.",
-                style: kSubTextStyle,
+                style: AppTextStyle.kSubTextStyle,
                 textAlign: TextAlign.center,
               ),
-              sizeVer(20),
+              AppSize.sizeVer(20),
               ButtonContainerWidget(
                 text: "Sign In",
                 btnColor: Colors.black,
@@ -44,7 +44,7 @@ class WelcomePage extends StatelessWidget {
                   );
                 },
               ),
-              sizeVer(8),
+              AppSize.sizeVer(8),
               ButtonContainerWidget(
                 text: "Sign Up",
                 btnColor: Colors.white,

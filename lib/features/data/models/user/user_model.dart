@@ -10,6 +10,7 @@ class UserModel extends UserEntity {
     final String? bio,
     final String? email,
     final String? profileUrl,
+    final String? role,
   }) : super(
           uid: uid,
           npm: npm,
@@ -18,6 +19,7 @@ class UserModel extends UserEntity {
           bio: bio,
           email: email,
           profileUrl: profileUrl,
+          role: role,
         );
 
   factory UserModel.fromSnapshot(DocumentSnapshot snap) {
@@ -31,6 +33,7 @@ class UserModel extends UserEntity {
       bio: snapshot['bio'],
       email: snapshot['email'],
       profileUrl: snapshot['profileUrl'],
+      role: snapshot['role'],
     );
   }
 
@@ -42,5 +45,6 @@ class UserModel extends UserEntity {
         "bio": bio,
         "email": email,
         "profileUrl": profileUrl,
+        "role": role,
       };
 }

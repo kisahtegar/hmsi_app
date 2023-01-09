@@ -29,6 +29,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         bio: userEntity.bio,
         email: userEntity.email,
         profileUrl: userEntity.profileUrl,
+        role: userEntity.role,
       ).toJson();
 
       if (!userDoc.exists) {
@@ -148,6 +149,9 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
     if (userEntity.profileUrl != "" && userEntity.profileUrl != null) {
       userInformation['profileUrl'] = userEntity.profileUrl;
+    }
+    if (userEntity.role != "" && userEntity.role != null) {
+      userInformation['role'] = userEntity.role;
     }
 
     userCollection.doc(userEntity.uid).update(userInformation);
