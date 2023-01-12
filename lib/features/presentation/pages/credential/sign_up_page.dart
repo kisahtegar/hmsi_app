@@ -37,7 +37,7 @@ class _SignUpPageState extends State<SignUpPage> {
     debugPrint("SignUpPage[build]: Building!!");
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: backGroundColor,
+      backgroundColor: AppColor.backGroundColor,
       body: BlocConsumer<CredentialCubit, CredentialState>(
         listener: (context, credentialState) {
           if (credentialState is CredentialSuccess) {
@@ -48,7 +48,6 @@ class _SignUpPageState extends State<SignUpPage> {
             debugPrint("SignUpPage[CredentialState]: CredentialFailure");
             toast("Invalid E-Mail or password");
           }
-          debugPrint("SignUpPage[CredentialState]: inside listener");
         },
         builder: (context, credentialState) {
           if (credentialState is CredentialSuccess) {
@@ -64,7 +63,7 @@ class _SignUpPageState extends State<SignUpPage> {
               },
             );
           }
-          debugPrint("SignUpPage[CredentialFailure]: failure inside builder!!");
+          debugPrint("SignUpPage[builder_CredentialCubit]: $credentialState");
           return _bodyWidget(size, context);
         },
       ),
@@ -89,7 +88,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
             ),
           ),
-          sizeVer(size.height * 0.02),
+          AppSize.sizeVer(size.height * 0.02),
 
           // Column of text, box, button
           Padding(
@@ -100,13 +99,13 @@ class _SignUpPageState extends State<SignUpPage> {
                 Text.rich(
                   TextSpan(
                     text: "Register",
-                    style: kTitleTextStyle.copyWith(
+                    style: AppTextStyle.kTitleTextStyle.copyWith(
                       fontSize: size.height * 0.05,
                     ),
                     children: <TextSpan>[
                       TextSpan(
                         text: "\nCreate your account",
-                        style: kSubTextStyle.copyWith(
+                        style: AppTextStyle.kSubTextStyle.copyWith(
                           fontWeight: FontWeight.w400,
                           fontSize: size.height * 0.018,
                         ),
@@ -115,15 +114,16 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                sizeVer(size.height * 0.05),
+                AppSize.sizeVer(size.height * 0.05),
 
                 // Username
                 FormContainerWidget(
                   controller: _usernameController,
                   iconsField: Icons.person,
                   hintText: "Username",
+                  maxLength: 25,
                 ),
-                sizeVer(size.height * 0.01),
+                AppSize.sizeVer(size.height * 0.01),
 
                 // E-mail
                 FormContainerWidget(
@@ -132,7 +132,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   hintText: "E-Mail",
                   inputType: TextInputType.emailAddress,
                 ),
-                sizeVer(size.height * 0.01),
+                AppSize.sizeVer(size.height * 0.01),
 
                 // Password
                 FormContainerWidget(
@@ -141,7 +141,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   hintText: "Password",
                   isPasswordField: true,
                 ),
-                sizeVer(size.height * 0.19),
+                AppSize.sizeVer(size.height * 0.19),
 
                 // Register Button
                 _loading == true
@@ -157,15 +157,15 @@ class _SignUpPageState extends State<SignUpPage> {
                         },
                       ),
 
-                sizeVer(size.height * 0.02),
+                AppSize.sizeVer(size.height * 0.02),
 
                 // Navigator to SignInPage
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       "Have an account? ",
-                      style: TextStyle(color: primaryColor),
+                      style: TextStyle(color: AppColor.primaryColor),
                     ),
                     InkWell(
                       onTap: () {
@@ -208,6 +208,7 @@ class _SignUpPageState extends State<SignUpPage> {
       npm: "",
       bio: "",
       profileUrl: "",
+      role: "guest",
     ))
         .then((value) {
       setState(() {

@@ -10,6 +10,7 @@ class UserEntity extends Equatable {
   final String? bio;
   final String? email;
   final String? profileUrl;
+  final String? role;
 
   // will not going to store in DB
   final String? password;
@@ -27,6 +28,7 @@ class UserEntity extends Equatable {
     this.password,
     this.otherUid,
     this.imageFile,
+    this.role,
   });
 
   @override
@@ -41,5 +43,6 @@ class UserEntity extends Equatable {
         password,
         otherUid,
         imageFile,
+        role,
       ];
 }

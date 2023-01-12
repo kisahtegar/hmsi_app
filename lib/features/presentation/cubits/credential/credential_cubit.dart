@@ -43,4 +43,8 @@ class CredentialCubit extends Cubit<CredentialState> {
       emit(CredentialFailure());
     }
   }
+
+  Future<void> initialCredential() async {
+    emit(CredentialInitial());
+  }
 }

@@ -14,6 +14,7 @@ class FormContainerWidget extends StatefulWidget {
   final String? labelText;
   final String? helperText;
   final IconData? iconsField;
+  final int? maxLength;
 
   const FormContainerWidget({
     Key? key,
@@ -28,6 +29,7 @@ class FormContainerWidget extends StatefulWidget {
     this.labelText,
     this.helperText,
     this.iconsField,
+    this.maxLength,
   }) : super(key: key);
 
   @override
@@ -55,12 +57,14 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
           onSaved: widget.onSaved,
           validator: widget.validator,
           onFieldSubmitted: widget.onFieldSubmitted,
+          maxLength: widget.maxLength,
           decoration: InputDecoration(
             icon: Icon(
               widget.iconsField,
               color: Colors.black,
             ),
             fillColor: Colors.transparent,
+            counterText: "",
             border: InputBorder.none,
             filled: true,
             hintText: widget.hintText,
@@ -74,8 +78,9 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
                     },
                     child: Icon(
                       _obscureText ? Icons.visibility_off : Icons.visibility,
-                      color:
-                          _obscureText == false ? Colors.black : secondaryColor,
+                      color: _obscureText == false
+                          ? Colors.black
+                          : AppColor.secondaryColor,
                     ),
                   )
                 : const Text(""),

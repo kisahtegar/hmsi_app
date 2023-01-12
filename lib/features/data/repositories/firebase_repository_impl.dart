@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:hmsi_app/features/data/data_sources/remote_data_source/firebase_remote_data_source.dart';
 import 'package:hmsi_app/features/domain/entities/user/user_entity.dart';
 import 'package:hmsi_app/features/domain/repositories/firebase_repository.dart';
@@ -44,4 +46,9 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   @override
   Future<void> updateUser(UserEntity userEntity) async =>
       firebaseRemoteDataSource.updateUser(userEntity);
+
+  @override
+  Future<String> uploadImageToStorage(
+          File? file, bool isPost, String childName) async =>
+      firebaseRemoteDataSource.uploadImageToStorage(file, isPost, childName);
 }

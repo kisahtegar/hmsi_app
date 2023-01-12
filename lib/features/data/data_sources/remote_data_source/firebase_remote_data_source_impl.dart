@@ -1,18 +1,25 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:hmsi_app/const.dart';
-import 'package:hmsi_app/features/data/data_sources/remote_data_source/firebase_remote_data_source.dart';
-import 'package:hmsi_app/features/data/models/user/user_model.dart';
-import 'package:hmsi_app/features/domain/entities/user/user_entity.dart';
+import 'package:uuid/uuid.dart';
+
+import '../../../../const.dart';
+import '../../../domain/entities/user/user_entity.dart';
+import '../../models/user/user_model.dart';
+import 'firebase_remote_data_source.dart';
 
 class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   final FirebaseFirestore firebaseFirestore;
   final FirebaseAuth firebaseAuth;
+  final FirebaseStorage firebaseStorage;
 
   FirebaseRemoteDataSourceImpl({
     required this.firebaseFirestore,
     required this.firebaseAuth,
+    required this.firebaseStorage,
   });
 
   @override
@@ -29,6 +36,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         bio: userEntity.bio,
         email: userEntity.email,
         profileUrl: userEntity.profileUrl,
+        role: userEntity.role,
       ).toJson();
 
       if (!userDoc.exists) {
@@ -149,7 +157,31 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     if (userEntity.profileUrl != "" && userEntity.profileUrl != null) {
       userInformation['profileUrl'] = userEntity.profileUrl;
     }
+    if (userEntity.role != "" && userEntity.role != null) {
+      userInformation['role'] = userEntity.role;
+    }
 
     userCollection.doc(userEntity.uid).update(userInformation);
+  }
+
+  @override
+  Future<String> uploadImageToStorage(
+      File? file, bool isPost, String childName) async {
+    Reference ref = firebaseStorage
+        .ref()
+        .child(childName)
+        .child(firebaseAuth.currentUser!.uid);
+
+    if (isPost) {
+      String id = const Uuid().v1();
+      ref = ref.child(id);
+    }
+
+    final uploadTask = ref.putFile(file!);
+
+    final imageUrl =
+        (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
+
+    return await imageUrl;
   }
 }
