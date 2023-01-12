@@ -4,13 +4,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 // AppColor
 class AppColor {
   static Color backGroundColor = Colors.white;
-  static Color gradientFirst = const Color(0xff0f17ad);
+  static Color gradientFirst = const Color.fromARGB(255, 11, 17, 136);
   static Color gradientSecond = const Color(0xFF6985e8);
   static Color blueColor = const Color.fromRGBO(0, 149, 246, 1);
   static Color primaryColor = Colors.black;
   static Color secondaryColor = Colors.grey;
   static Color darkGreyColor = const Color.fromRGBO(97, 97, 97, 1);
   static Color kTitleTextColor = const Color(0xFF303030);
+  static Color kTitleTextColorLight = Colors.white;
   static Color kTextLightColor = const Color.fromARGB(255, 61, 60, 60);
 }
 
@@ -21,9 +22,18 @@ class AppTextStyle {
     color: AppColor.kTitleTextColor,
     fontWeight: FontWeight.bold,
   );
+  static TextStyle kTitleTextStyleLight = TextStyle(
+    fontSize: 32,
+    color: AppColor.kTitleTextColorLight,
+    fontWeight: FontWeight.bold,
+  );
   static TextStyle kSubTextStyle = TextStyle(
     fontSize: 14,
     color: AppColor.kTextLightColor,
+  );
+  static TextStyle kSubTextStyleLight = TextStyle(
+    fontSize: 14,
+    color: AppColor.kTitleTextColorLight,
   );
   static TextStyle kDescTextStyle = TextStyle(
     fontSize: 14,

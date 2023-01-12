@@ -121,6 +121,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   controller: _usernameController,
                   iconsField: Icons.person,
                   hintText: "Username",
+                  maxLength: 25,
                 ),
                 AppSize.sizeVer(size.height * 0.01),
 
