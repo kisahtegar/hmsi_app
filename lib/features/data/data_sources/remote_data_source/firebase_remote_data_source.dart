@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import '../../../domain/entities/article/article_entity.dart';
 import '../../../domain/entities/user/user_entity.dart';
 
 abstract class FirebaseRemoteDataSource {
@@ -20,4 +21,11 @@ abstract class FirebaseRemoteDataSource {
   // Cloud Storage Features
   Future<String> uploadImageToStorage(
       File? file, bool isPost, String childName);
+
+  // Article Features
+  Future<void> createArticle(ArticleEntity articleEntity);
+  Stream<List<ArticleEntity>> readArticles(ArticleEntity articleEntity);
+  Future<void> updateArticle(ArticleEntity articleEntity);
+  Future<void> deleteArticle(ArticleEntity articleEntity);
+  Future<void> likeArticle(ArticleEntity articleEntity);
 }

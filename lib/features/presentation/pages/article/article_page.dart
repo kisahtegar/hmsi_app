@@ -14,7 +14,7 @@ class ArticlePage extends StatelessWidget {
         "Title Lorem ipsum dolor sit amet, consectetur adipiscing elits wkwkwk";
 
     return Scaffold(
-      backgroundColor: AppColor.backGroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
@@ -38,7 +38,7 @@ class ArticlePage extends StatelessWidget {
           child: Column(
             children: [
               SingleArticleWidget(size: size, name: name),
-              AppSize.sizeVer(10),
+              AppSize.sizeVer(20),
               SingleArticleWidget(size: size, name: name),
             ],
           ),

@@ -4,9 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:hmsi_app/features/data/models/article/article_model.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../const.dart';
+import '../../../domain/entities/article/article_entity.dart';
 import '../../../domain/entities/user/user_entity.dart';
 import '../../models/user/user_model.dart';
 import 'firebase_remote_data_source.dart';
@@ -183,5 +185,106 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
 
     return await imageUrl;
+  }
+
+  @override
+  Future<void> createArticle(ArticleEntity articleEntity) async {
+    final articleCollection =
+        firebaseFirestore.collection(FirebaseConst.articles);
+
+    final newArticle = ArticleModel(
+      articleId: articleEntity.articleId,
+      creatorUid: articleEntity.creatorUid,
+      username: articleEntity.username,
+      title: articleEntity.title,
+      description: articleEntity.description,
+      articleImageUrl: articleEntity.articleImageUrl,
+      userProfileUrl: articleEntity.userProfileUrl,
+      likes: const [],
+      totalLikes: 0,
+      totalComments: 0,
+      createAt: articleEntity.createAt,
+    ).toJson();
+
+    try {
+      final articleDocRef =
+          await articleCollection.doc(articleEntity.articleId).get();
+
+      if (!articleDocRef.exists) {
+        articleCollection.doc(articleEntity.articleId).set(newArticle);
+      } else {
+        articleCollection.doc(articleEntity.articleId).update(newArticle);
+      }
+    } catch (e) {
+      toast("some error occured");
+    }
+  }
+
+  @override
+  Future<void> deleteArticle(ArticleEntity articleEntity) async {
+    final articleCollection =
+        firebaseFirestore.collection(FirebaseConst.articles);
+
+    try {
+      articleCollection.doc(articleEntity.articleId).delete();
+    } catch (e) {
+      toast("some error occured");
+    }
+  }
+
+  @override
+  Future<void> likeArticle(ArticleEntity articleEntity) async {
+    final articleCollection =
+        firebaseFirestore.collection(FirebaseConst.articles);
+    final currentUid = await getCurrentUid();
+    final articleRef =
+        await articleCollection.doc(articleEntity.articleId).get();
+
+    if (articleRef.exists) {
+      List likes = articleRef.get("likes");
+      final totalLikes = articleRef.get("totalLikes");
+
+      if (likes.contains(currentUid)) {
+        articleCollection.doc(articleEntity.articleId).update({
+          "likes": FieldValue.arrayRemove([currentUid]),
+          "totalLikes": totalLikes - 1,
+        });
+      } else {
+        articleCollection.doc(articleEntity.articleId).update({
+          "likes": FieldValue.arrayUnion([currentUid]),
+          "totalLikes": totalLikes + 1,
+        });
+      }
+    }
+  }
+
+  @override
+  Stream<List<ArticleEntity>> readArticles(ArticleEntity articleEntity) {
+    final articleCollection = firebaseFirestore
+        .collection(FirebaseConst.articles)
+        .orderBy("createAt", descending: true);
+
+    return articleCollection.snapshots().map((querySnapshot) =>
+        querySnapshot.docs.map((e) => ArticleModel.fromSnapshot(e)).toList());
+  }
+
+  @override
+  Future<void> updateArticle(ArticleEntity articleEntity) async {
+    final articleCollection =
+        firebaseFirestore.collection(FirebaseConst.articles);
+    Map<String, dynamic> articleInfo = {};
+
+    if (articleEntity.title != "" && articleEntity.title != null) {
+      articleInfo['title'] = articleEntity.title;
+    }
+    if (articleEntity.description != "" && articleEntity.description != null) {
+      articleInfo['description'] = articleEntity.description;
+    }
+    if (articleEntity.articleImageUrl != "" &&
+        articleEntity.articleImageUrl != null) {
+      articleInfo['articleImageUrl'] = articleEntity.articleImageUrl;
+    }
+
+    articleCollection.doc(articleEntity.articleId).update(articleInfo);
   }
 }
