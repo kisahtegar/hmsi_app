@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hmsi_app/features/domain/entities/user/user_entity.dart';
+import 'package:hmsi_app/features/presentation/pages/article/upload_article/upload_article_page.dart';
 import 'package:hmsi_app/features/presentation/pages/credential/sign_in_page.dart';
 import 'package:hmsi_app/features/presentation/pages/credential/sign_up_page.dart';
 import 'package:hmsi_app/features/presentation/pages/credential/welcome_page.dart';
@@ -23,6 +24,13 @@ class OnGenerateRoute {
       case PageConst.editProfilePage:
         if (args is UserEntity) {
           return routeBuilder(EditProfilePage(currentUser: args));
+        } else {
+          return routeBuilder(const NoPageFound());
+        }
+
+      case PageConst.uploadArticlePage:
+        if (args is UserEntity) {
+          return routeBuilder(UploadArticlePage(currentUser: args));
         } else {
           return routeBuilder(const NoPageFound());
         }

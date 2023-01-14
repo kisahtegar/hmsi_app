@@ -58,11 +58,13 @@ class PageConst {
   static const String signInPage = 'signInPage';
   static const String signUpPage = 'signUpPage';
   static const String editProfilePage = 'editProfilePage';
+  static const String uploadArticlePage = 'uploadArticlePage';
 }
 
 // Firebase Collection
 class FirebaseConst {
   static const String users = 'users';
+  static const String articles = 'articles';
 }
 
 void toast(String message) {
