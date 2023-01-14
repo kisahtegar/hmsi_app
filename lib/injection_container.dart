@@ -6,6 +6,11 @@ import 'package:hmsi_app/features/data/data_sources/remote_data_source/firebase_
 import 'package:hmsi_app/features/data/data_sources/remote_data_source/firebase_remote_data_source_impl.dart';
 import 'package:hmsi_app/features/data/repositories/firebase_repository_impl.dart';
 import 'package:hmsi_app/features/domain/repositories/firebase_repository.dart';
+import 'package:hmsi_app/features/domain/usecases/article/create_article_usecase.dart';
+import 'package:hmsi_app/features/domain/usecases/article/delete_article_usecase.dart';
+import 'package:hmsi_app/features/domain/usecases/article/like_article_usecase.dart';
+import 'package:hmsi_app/features/domain/usecases/article/read_articles_usecase.dart';
+import 'package:hmsi_app/features/domain/usecases/article/update_article_usecase.dart';
 import 'package:hmsi_app/features/domain/usecases/user/create_user_usecase.dart';
 import 'package:hmsi_app/features/domain/usecases/user/get_current_uid_usecase.dart';
 import 'package:hmsi_app/features/domain/usecases/user/get_single_other_user_usecase.dart';
@@ -16,6 +21,7 @@ import 'package:hmsi_app/features/domain/usecases/user/sign_in_user_usecase.dart
 import 'package:hmsi_app/features/domain/usecases/user/sign_out_usecase.dart';
 import 'package:hmsi_app/features/domain/usecases/user/sign_up_user_usecase.dart';
 import 'package:hmsi_app/features/domain/usecases/user/update_user_usecase.dart';
+import 'package:hmsi_app/features/presentation/cubits/article/article_cubit.dart';
 import 'package:hmsi_app/features/presentation/cubits/auth/auth_cubit.dart';
 import 'package:hmsi_app/features/presentation/cubits/credential/credential_cubit.dart';
 import 'package:hmsi_app/features/presentation/cubits/user/get_single_other_user/get_single_other_user_cubit.dart';
@@ -61,6 +67,17 @@ Future<void> init() async {
   sl.registerFactory(
       () => GetSingleOtherUserCubit(getSingleOtherUserUseCase: sl.call()));
 
+  // ArticleCubit
+  sl.registerFactory(
+    () => ArticleCubit(
+      createArticleUseCase: sl.call(),
+      readArticlesUseCase: sl.call(),
+      updateArticleUseCase: sl.call(),
+      deleteArticleUseCase: sl.call(),
+      likeArticleUseCase: sl.call(),
+    ),
+  );
+
   // !-- Use Cases --!
 
   // user
@@ -87,6 +104,18 @@ Future<void> init() async {
   // Cloud Storage
   sl.registerLazySingleton(
       () => UploadImageToStorageUseCase(firebaseRepository: sl.call()));
+
+  // Article
+  sl.registerLazySingleton(
+      () => CreateArticleUseCase(firebaseRepository: sl.call()));
+  sl.registerLazySingleton(
+      () => ReadArticlesUseCase(firebaseRepository: sl.call()));
+  sl.registerLazySingleton(
+      () => UpdateArticleUseCase(firebaseRepository: sl.call()));
+  sl.registerLazySingleton(
+      () => DeleteArticleUseCase(firebaseRepository: sl.call()));
+  sl.registerLazySingleton(
+      () => LikeArticleUseCase(firebaseRepository: sl.call()));
 
   // !-- Repository --!
   sl.registerLazySingleton<FirebaseRepository>(

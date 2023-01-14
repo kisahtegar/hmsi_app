@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hmsi_app/features/domain/entities/article/article_entity.dart';
+import 'package:hmsi_app/features/domain/entities/user/user_entity.dart';
+import 'package:hmsi_app/features/presentation/cubits/article/article_cubit.dart';
 
 import '../../../../const.dart';
 import 'widget/single_article_widget.dart';
+import 'package:hmsi_app/injection_container.dart' as di;
 
 class ArticlePage extends StatelessWidget {
-  const ArticlePage({super.key});
+  final UserEntity currentUser;
+
+  const ArticlePage({super.key, required this.currentUser});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("ArticlePage[build]: Building!!");
-    Size size = MediaQuery.of(context).size;
-    String name =
-        "Title Lorem ipsum dolor sit amet, consectetur adipiscing elits wkwkwk";
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -26,22 +30,64 @@ class ArticlePage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 10.0),
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  PageConst.uploadArticlePage,
+                  arguments: currentUser,
+                );
+              },
               child: Icon(Icons.create, color: AppColor.primaryColor),
             ),
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-          child: Column(
-            children: [
-              SingleArticleWidget(size: size, name: name),
-              AppSize.sizeVer(20),
-              SingleArticleWidget(size: size, name: name),
-            ],
-          ),
+      body: BlocProvider<ArticleCubit>(
+        create: (context) => di.sl<ArticleCubit>()
+          ..getArticles(articleEntity: const ArticleEntity()),
+        child: BlocBuilder<ArticleCubit, ArticleState>(
+          builder: (context, articleState) {
+            if (articleState is ArticleLoading) {
+              return const Center(
+                  child: CircularProgressIndicator(
+                color: Colors.black,
+              ));
+            }
+            if (articleState is ArticleFailure) {
+              toast("Some failure occured while creating the article");
+            }
+            if (articleState is ArticleLoaded) {
+              return articleState.articles.isEmpty
+                  ? _noPostsWidget()
+                  : ListView.builder(
+                      itemCount: articleState.articles.length,
+                      itemBuilder: (context, index) {
+                        final article = articleState.articles[index];
+                        return BlocProvider(
+                          create: (context) => di.sl<ArticleCubit>(),
+                          child: SingleArticleWidget(articleEntity: article),
+                        );
+                      },
+                    );
+            }
+            return const Center(
+                child: CircularProgressIndicator(
+              color: Colors.black,
+            ));
+          },
+        ),
+      ),
+    );
+  }
+
+  Center _noPostsWidget() {
+    return Center(
+      child: Text(
+        "No Posts",
+        style: TextStyle(
+          color: AppColor.primaryColor,
+          fontWeight: FontWeight.bold,
+          fontSize: 18,
         ),
       ),
     );

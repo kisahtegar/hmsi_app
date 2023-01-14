@@ -61,7 +61,7 @@ class _MainScreenState extends State<MainScreen> {
                 onPageChanged: onPageChanged,
                 children: [
                   HomePage(currentUser: currentUser),
-                  const ArticlePage(),
+                  ArticlePage(currentUser: currentUser),
                   const NotificationPage(),
                   ProfilePage(currentUser: currentUser),
                 ],
