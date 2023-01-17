@@ -27,19 +27,21 @@ class ArticlePage extends StatelessWidget {
           style: TextStyle(color: AppColor.primaryColor, fontSize: 25),
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: InkWell(
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  PageConst.uploadArticlePage,
-                  arguments: currentUser,
-                );
-              },
-              child: Icon(Icons.create, color: AppColor.primaryColor),
-            ),
-          ),
+          currentUser.role == "admin"
+              ? Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        PageConst.uploadArticlePage,
+                        arguments: currentUser,
+                      );
+                    },
+                    child: Icon(Icons.create, color: AppColor.primaryColor),
+                  ),
+                )
+              : const SizedBox(),
         ],
       ),
       body: BlocProvider<ArticleCubit>(

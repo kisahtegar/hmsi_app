@@ -59,6 +59,8 @@ class PageConst {
   static const String signUpPage = 'signUpPage';
   static const String editProfilePage = 'editProfilePage';
   static const String uploadArticlePage = 'uploadArticlePage';
+  static const String detailArticlePage = 'detailArticlePage';
+  static const String editArticlePage = 'editArticlePage';
 }
 
 // Firebase Collection

@@ -25,6 +25,7 @@ abstract class FirebaseRemoteDataSource {
   // Article Features
   Future<void> createArticle(ArticleEntity articleEntity);
   Stream<List<ArticleEntity>> readArticles(ArticleEntity articleEntity);
+  Stream<List<ArticleEntity>> readSingleArticle(String articleId);
   Future<void> updateArticle(ArticleEntity articleEntity);
   Future<void> deleteArticle(ArticleEntity articleEntity);
   Future<void> likeArticle(ArticleEntity articleEntity);

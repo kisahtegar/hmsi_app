@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hmsi_app/features/domain/entities/article/article_entity.dart';
 import 'package:hmsi_app/features/domain/entities/user/user_entity.dart';
@@ -130,7 +131,7 @@ class _UploadArticleMainWidgetState extends State<UploadArticleMainWidget> {
                   FormEditWidget(
                     controller: _titleController,
                     title: "Title",
-                    maxLength: 80,
+                    maxLength: 125,
                     maxLines: 1,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -144,8 +145,11 @@ class _UploadArticleMainWidgetState extends State<UploadArticleMainWidget> {
                   AppSize.sizeVer(10),
                   FormEditWidget(
                     controller: _descriptionController,
+                    autofocus: true,
+                    focusNode: _focusNode,
                     title: "Description",
                     keyboardType: TextInputType.multiline,
+                    textInputAction: TextInputAction.newline,
                     maxLines: null,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -192,7 +196,7 @@ class _UploadArticleMainWidgetState extends State<UploadArticleMainWidget> {
       setState(() => _isUploading = true);
       di
           .sl<UploadImageToStorageUseCase>()
-          .call(_image!, false, "profileImages")
+          .call(_image!, false, "articleImages")
           .then((imageUrl) {
         _createSubmitArticle(image: imageUrl);
       });
@@ -206,6 +210,7 @@ class _UploadArticleMainWidgetState extends State<UploadArticleMainWidget> {
         articleId: const Uuid().v1(),
         creatorUid: widget.currentUser.uid,
         username: widget.currentUser.username,
+        name: widget.currentUser.name,
         title: _titleController.text,
         description: _descriptionController.text,
         articleImageUrl: image,
@@ -225,5 +230,49 @@ class _UploadArticleMainWidgetState extends State<UploadArticleMainWidget> {
       });
       Navigator.pop(context);
     });
+  }
+
+  void handleKeyPress(event) {
+    if (event is RawKeyUpEvent && event.data is RawKeyEventDataWeb) {
+      var data = event.data as RawKeyEventDataWeb;
+      if (data.code == "Enter" && !event.isShiftPressed) {
+        final val = _descriptionController.value;
+        final messageWithoutNewLine =
+            _descriptionController.text.substring(0, val.selection.start - 1) +
+                _descriptionController.text.substring(val.selection.start);
+        _descriptionController.value = TextEditingValue(
+          text: messageWithoutNewLine,
+          selection: TextSelection.fromPosition(
+            TextPosition(offset: messageWithoutNewLine.length),
+          ),
+        );
+        // _onSend();
+      }
+    }
+  }
+
+  late final _focusNode = FocusNode(
+    onKey: _handleKeyPress,
+  );
+
+  KeyEventResult _handleKeyPress(FocusNode focusNode, RawKeyEvent event) {
+    // handles submit on enter
+    if (event.isKeyPressed(LogicalKeyboardKey.enter) && !event.isShiftPressed) {
+      _sendMessage();
+      // handled means that the event will not propagate
+      return KeyEventResult.handled;
+    }
+    // ignore every other keyboard event including SHIFT+ENTER
+    return KeyEventResult.ignored;
+  }
+
+  void _sendMessage() {
+    if (_descriptionController.text.trim().isNotEmpty) {
+      // bring focus back to the input field
+      Future.delayed(Duration.zero, () {
+        _focusNode.requestFocus();
+        _descriptionController.clear();
+      });
+    }
   }
 }

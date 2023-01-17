@@ -196,6 +196,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
       articleId: articleEntity.articleId,
       creatorUid: articleEntity.creatorUid,
       username: articleEntity.username,
+      name: articleEntity.name,
       title: articleEntity.title,
       description: articleEntity.description,
       articleImageUrl: articleEntity.articleImageUrl,
@@ -269,7 +270,19 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   }
 
   @override
+  Stream<List<ArticleEntity>> readSingleArticle(String articleId) {
+    final articleCollection = firebaseFirestore
+        .collection(FirebaseConst.articles)
+        .orderBy("createAt", descending: true)
+        .where("articleId", isEqualTo: articleId);
+
+    return articleCollection.snapshots().map((querySnapshot) =>
+        querySnapshot.docs.map((e) => ArticleModel.fromSnapshot(e)).toList());
+  }
+
+  @override
   Future<void> updateArticle(ArticleEntity articleEntity) async {
+    debugPrint("Passing ");
     final articleCollection =
         firebaseFirestore.collection(FirebaseConst.articles);
     Map<String, dynamic> articleInfo = {};

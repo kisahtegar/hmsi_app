@@ -72,4 +72,8 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   @override
   Future<void> updateArticle(ArticleEntity articleEntity) async =>
       firebaseRemoteDataSource.updateArticle(articleEntity);
+
+  @override
+  Stream<List<ArticleEntity>> readSingleArticle(String articleId) =>
+      firebaseRemoteDataSource.readSingleArticle(articleId);
 }

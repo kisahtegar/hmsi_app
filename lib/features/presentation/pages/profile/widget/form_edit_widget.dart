@@ -9,6 +9,9 @@ class FormEditWidget extends StatelessWidget {
   final int? maxLines;
   final int? maxLength;
   final String? Function(String?)? validator;
+  final bool autofocus;
+  final FocusNode? focusNode;
+  final TextInputAction? textInputAction;
 
   const FormEditWidget({
     Key? key,
@@ -18,6 +21,9 @@ class FormEditWidget extends StatelessWidget {
     this.maxLines,
     this.maxLength,
     this.validator,
+    this.autofocus = false,
+    this.focusNode,
+    this.textInputAction,
   }) : super(key: key);
 
   @override
@@ -35,7 +41,10 @@ class FormEditWidget extends StatelessWidget {
         ),
         TextFormField(
           controller: controller,
+          autofocus: autofocus,
+          focusNode: focusNode,
           keyboardType: keyboardType,
+          textInputAction: textInputAction,
           maxLines: maxLines,
           maxLength: maxLength,
           style: TextStyle(color: AppColor.primaryColor),

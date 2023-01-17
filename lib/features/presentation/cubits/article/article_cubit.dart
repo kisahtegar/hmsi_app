@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:hmsi_app/features/domain/entities/article/article_entity.dart';
 import 'package:hmsi_app/features/domain/usecases/article/create_article_usecase.dart';
 import 'package:hmsi_app/features/domain/usecases/article/delete_article_usecase.dart';
@@ -40,9 +41,12 @@ class ArticleCubit extends Cubit<ArticleState> {
     emit(ArticleLoading());
     try {
       final streamResponse = readArticlesUseCase.call(articleEntity);
-      streamResponse.listen((articles) {
-        emit(ArticleLoaded(articles: articles));
-      });
+      streamResponse.listen(
+        (articles) {
+          debugPrint("ArticleCubit[getArticles]: emit(ArticleLoaded())");
+          emit(ArticleLoaded(articles: articles));
+        },
+      );
     } on SocketException catch (_) {
       emit(ArticleFailure());
     } catch (_) {
