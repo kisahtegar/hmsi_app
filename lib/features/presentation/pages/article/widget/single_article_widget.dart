@@ -1,19 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hmsi_app/features/domain/entities/app_entity.dart';
 import 'package:hmsi_app/features/domain/entities/article/article_entity.dart';
+import 'package:hmsi_app/features/presentation/cubits/article/article_cubit.dart';
 import 'package:hmsi_app/features/presentation/widgets/image_box_widget.dart';
 import 'package:hmsi_app/features/presentation/widgets/profile_widget.dart';
 
 import '../../../../../const.dart';
+import 'package:hmsi_app/injection_container.dart' as di;
 
-class SingleArticleWidget extends StatelessWidget {
-  // final Size size;
-  // final String name;
+import '../../../../domain/usecases/user/get_current_uid_usecase.dart';
+
+class SingleArticleWidget extends StatefulWidget {
   final ArticleEntity articleEntity;
 
   const SingleArticleWidget({
     Key? key,
     required this.articleEntity,
   }) : super(key: key);
+
+  @override
+  State<SingleArticleWidget> createState() => _SingleArticleWidgetState();
+}
+
+class _SingleArticleWidgetState extends State<SingleArticleWidget> {
+  String _currentUid = "";
+
+  @override
+  void initState() {
+    di.sl<GetCurrentUidUseCase>().call().then((uid) {
+      setState(() {
+        _currentUid = uid;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,65 +59,131 @@ class SingleArticleWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image
-              Container(
-                width: double.infinity,
-                height: size.height * 0.25,
-                decoration: BoxDecoration(
-                  // color: Colors.red,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: imageBoxWidget(imageUrl: articleEntity.articleImageUrl),
-              ),
-              AppSize.sizeVer(10),
-              // Title
-              Text(
-                articleEntity.title!.length > 63
-                    ? "${articleEntity.title!.substring(0, 63)}..."
-                    : articleEntity.title!,
-                style: AppTextStyle.kTitleTextStyle.copyWith(fontSize: 19),
-              ),
-              AppSize.sizeVer(10),
-              // User Tag
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 7.0,
-                    vertical: 3.0,
-                  ),
-                  child: FittedBox(
-                    child: Row(
+              // [TopSection]: Image and title
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      PageConst.detailArticlePage,
+                      arguments: AppEntity(
+                        uid: _currentUid,
+                        articleId: widget.articleEntity.articleId,
+                        creatorUid: widget.articleEntity.creatorUid,
+                      ),
+                    );
+                  },
+                  child: Ink(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          width: 25,
-                          height: 25,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: profileWidget(
-                                imageUrl: articleEntity.userProfileUrl),
+                        // Image
+                        Container(
+                          width: double.infinity,
+                          height: size.height * 0.25,
+                          decoration: BoxDecoration(
+                            // color: Colors.red,
+                            borderRadius: BorderRadius.circular(10),
                           ),
+                          child: imageBoxWidget(
+                              imageUrl: widget.articleEntity.articleImageUrl),
                         ),
-                        AppSize.sizeHor(8),
+                        AppSize.sizeVer(10),
+                        // Title
                         Text(
-                          articleEntity.username!,
-                          style: AppTextStyle.kTitleTextStyle.copyWith(
-                            fontSize: 15,
-                            color: Colors.white,
-                          ),
-                        )
+                          widget.articleEntity.title!.length > 63
+                              ? "${widget.articleEntity.title!.substring(0, 63)}..."
+                              : widget.articleEntity.title!,
+                          style: AppTextStyle.kTitleTextStyle
+                              .copyWith(fontSize: 19),
+                        ),
                       ],
                     ),
                   ),
                 ),
               ),
               AppSize.sizeVer(10),
+              // User Tag
+
+              // [BottomSection]: Include Usertag, like button, total like.
+              Row(
+                children: [
+                  // [Container]: User tag
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 7.0,
+                        vertical: 3.0,
+                      ),
+                      child: FittedBox(
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 25,
+                              height: 25,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: profileWidget(
+                                    imageUrl:
+                                        widget.articleEntity.userProfileUrl),
+                              ),
+                            ),
+                            AppSize.sizeHor(8),
+                            Text(
+                              widget.articleEntity.username!,
+                              style: AppTextStyle.kTitleTextStyle.copyWith(
+                                fontSize: 15,
+                                color: Colors.white,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const Spacer(),
+
+                  // [Text]: Total Likes.
+                  Text(
+                    '${widget.articleEntity.totalLikes} likes',
+                    style: TextStyle(
+                      color: AppColor.primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  AppSize.sizeHor(5),
+                  // [Button]: Like Button.
+                  InkWell(
+                    onTap: _likeArticle,
+                    child: Icon(
+                      widget.articleEntity.likes!.contains(_currentUid)
+                          ? Icons.favorite
+                          : Icons.favorite_outline,
+                      color: widget.articleEntity.likes!.contains(_currentUid)
+                          ? Colors.red
+                          : AppColor.primaryColor,
+                    ),
+                  )
+                ],
+              ),
+              AppSize.sizeVer(10),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _likeArticle() {
+    BlocProvider.of<ArticleCubit>(context).likeArticle(
+      articleEntity: ArticleEntity(
+        articleId: widget.articleEntity.articleId,
       ),
     );
   }

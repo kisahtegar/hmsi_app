@@ -5,6 +5,7 @@ class ArticleEntity extends Equatable {
   final String? articleId;
   final String? creatorUid;
   final String? username;
+  final String? name;
   final String? title;
   final String? description;
   final String? articleImageUrl;
@@ -18,6 +19,7 @@ class ArticleEntity extends Equatable {
     this.articleId,
     this.creatorUid,
     this.username,
+    this.name,
     this.title,
     this.description,
     this.articleImageUrl,
@@ -33,6 +35,7 @@ class ArticleEntity extends Equatable {
         articleId,
         creatorUid,
         username,
+        name,
         title,
         description,
         articleImageUrl,

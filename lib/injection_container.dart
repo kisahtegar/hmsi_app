@@ -10,6 +10,7 @@ import 'package:hmsi_app/features/domain/usecases/article/create_article_usecase
 import 'package:hmsi_app/features/domain/usecases/article/delete_article_usecase.dart';
 import 'package:hmsi_app/features/domain/usecases/article/like_article_usecase.dart';
 import 'package:hmsi_app/features/domain/usecases/article/read_articles_usecase.dart';
+import 'package:hmsi_app/features/domain/usecases/article/read_single_article_usecase.dart';
 import 'package:hmsi_app/features/domain/usecases/article/update_article_usecase.dart';
 import 'package:hmsi_app/features/domain/usecases/user/create_user_usecase.dart';
 import 'package:hmsi_app/features/domain/usecases/user/get_current_uid_usecase.dart';
@@ -22,6 +23,7 @@ import 'package:hmsi_app/features/domain/usecases/user/sign_out_usecase.dart';
 import 'package:hmsi_app/features/domain/usecases/user/sign_up_user_usecase.dart';
 import 'package:hmsi_app/features/domain/usecases/user/update_user_usecase.dart';
 import 'package:hmsi_app/features/presentation/cubits/article/article_cubit.dart';
+import 'package:hmsi_app/features/presentation/cubits/article/get_single_article/get_single_article_cubit.dart';
 import 'package:hmsi_app/features/presentation/cubits/auth/auth_cubit.dart';
 import 'package:hmsi_app/features/presentation/cubits/credential/credential_cubit.dart';
 import 'package:hmsi_app/features/presentation/cubits/user/get_single_other_user/get_single_other_user_cubit.dart';
@@ -78,6 +80,13 @@ Future<void> init() async {
     ),
   );
 
+  // GetSingleArticleCubit
+  sl.registerFactory(
+    () => GetSingleArticleCubit(
+      readSingleArticleUseCase: sl.call(),
+    ),
+  );
+
   // !-- Use Cases --!
 
   // user
@@ -110,6 +119,8 @@ Future<void> init() async {
       () => CreateArticleUseCase(firebaseRepository: sl.call()));
   sl.registerLazySingleton(
       () => ReadArticlesUseCase(firebaseRepository: sl.call()));
+  sl.registerLazySingleton(
+      () => ReadSingleArticleUseCase(firebaseRepository: sl.call()));
   sl.registerLazySingleton(
       () => UpdateArticleUseCase(firebaseRepository: sl.call()));
   sl.registerLazySingleton(

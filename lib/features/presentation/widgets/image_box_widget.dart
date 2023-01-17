@@ -8,13 +8,25 @@ Widget imageBoxWidget({String? imageUrl, File? image}) {
     if (imageUrl == null || imageUrl == "") {
       return Container(
         color: Colors.grey,
+        child: const Center(
+          child: Text(
+            "No image selected",
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
       );
     } else {
       return CachedNetworkImage(
         imageUrl: imageUrl,
         fit: BoxFit.cover,
         progressIndicatorBuilder: (context, url, progress) {
-          return const CircularProgressIndicator();
+          return const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 90, vertical: 20),
+            child: CircularProgressIndicator(),
+          );
         },
         errorWidget: (context, url, error) => Container(
           color: Colors.grey,
