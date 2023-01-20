@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hmsi_app/const.dart';
-import 'package:hmsi_app/features/presentation/pages/home/widget/icon_menu_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../const.dart';
 import '../../../domain/entities/user/user_entity.dart';
+import 'widget/icon_menu_widget.dart';
 
 class HomePage extends StatelessWidget {
   final UserEntity currentUser;

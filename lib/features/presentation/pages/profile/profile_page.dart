@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hmsi_app/const.dart';
-import 'package:hmsi_app/features/domain/entities/user/user_entity.dart';
-import 'package:hmsi_app/features/presentation/widgets/profile_widget.dart';
 
+import '../../../../const.dart';
+import '../../../domain/entities/user/user_entity.dart';
 import '../../cubits/auth/auth_cubit.dart';
 import '../../cubits/credential/credential_cubit.dart';
+import '../../widgets/profile_widget.dart';
 import 'widget/menu_button_container_widget.dart';
 
 class ProfilePage extends StatefulWidget {

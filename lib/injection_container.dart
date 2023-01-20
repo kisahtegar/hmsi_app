@@ -2,35 +2,47 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hmsi_app/features/data/data_sources/remote_data_source/firebase_remote_data_source.dart';
-import 'package:hmsi_app/features/data/data_sources/remote_data_source/firebase_remote_data_source_impl.dart';
-import 'package:hmsi_app/features/data/repositories/firebase_repository_impl.dart';
-import 'package:hmsi_app/features/domain/repositories/firebase_repository.dart';
-import 'package:hmsi_app/features/domain/usecases/article/create_article_usecase.dart';
-import 'package:hmsi_app/features/domain/usecases/article/delete_article_usecase.dart';
-import 'package:hmsi_app/features/domain/usecases/article/like_article_usecase.dart';
-import 'package:hmsi_app/features/domain/usecases/article/read_articles_usecase.dart';
-import 'package:hmsi_app/features/domain/usecases/article/read_single_article_usecase.dart';
-import 'package:hmsi_app/features/domain/usecases/article/update_article_usecase.dart';
-import 'package:hmsi_app/features/domain/usecases/user/create_user_usecase.dart';
-import 'package:hmsi_app/features/domain/usecases/user/get_current_uid_usecase.dart';
-import 'package:hmsi_app/features/domain/usecases/user/get_single_other_user_usecase.dart';
-import 'package:hmsi_app/features/domain/usecases/user/get_single_user_usecase.dart';
-import 'package:hmsi_app/features/domain/usecases/user/get_users_usecase.dart';
-import 'package:hmsi_app/features/domain/usecases/user/is_sign_in_usecase.dart';
-import 'package:hmsi_app/features/domain/usecases/user/sign_in_user_usecase.dart';
-import 'package:hmsi_app/features/domain/usecases/user/sign_out_usecase.dart';
-import 'package:hmsi_app/features/domain/usecases/user/sign_up_user_usecase.dart';
-import 'package:hmsi_app/features/domain/usecases/user/update_user_usecase.dart';
-import 'package:hmsi_app/features/presentation/cubits/article/article_cubit.dart';
-import 'package:hmsi_app/features/presentation/cubits/article/get_single_article/get_single_article_cubit.dart';
-import 'package:hmsi_app/features/presentation/cubits/auth/auth_cubit.dart';
-import 'package:hmsi_app/features/presentation/cubits/credential/credential_cubit.dart';
-import 'package:hmsi_app/features/presentation/cubits/user/get_single_other_user/get_single_other_user_cubit.dart';
-import 'package:hmsi_app/features/presentation/cubits/user/get_single_user/get_single_user_cubit.dart';
-import 'package:hmsi_app/features/presentation/cubits/user/user_cubit.dart';
 
+import 'features/data/data_sources/remote_data_source/firebase_remote_data_source.dart';
+import 'features/data/data_sources/remote_data_source/firebase_remote_data_source_impl.dart';
+import 'features/data/repositories/firebase_repository_impl.dart';
+import 'features/domain/repositories/firebase_repository.dart';
+import 'features/domain/usecases/article/create_article_usecase.dart';
+import 'features/domain/usecases/article/delete_article_usecase.dart';
+import 'features/domain/usecases/article/like_article_usecase.dart';
+import 'features/domain/usecases/article/read_articles_usecase.dart';
+import 'features/domain/usecases/article/read_single_article_usecase.dart';
+import 'features/domain/usecases/article/update_article_usecase.dart';
+import 'features/domain/usecases/comment/create_comment_usecase.dart';
+import 'features/domain/usecases/comment/delete_comment_usecase.dart';
+import 'features/domain/usecases/comment/like_comment_usecase.dart';
+import 'features/domain/usecases/comment/read_comments_usecase.dart';
+import 'features/domain/usecases/comment/update_comment_usecase.dart';
+import 'features/domain/usecases/reply/create_reply_usecase.dart';
+import 'features/domain/usecases/reply/delete_reply_usecase.dart';
+import 'features/domain/usecases/reply/like_reply_usecase.dart';
+import 'features/domain/usecases/reply/read_replys_usecase.dart';
+import 'features/domain/usecases/reply/update_reply_usecase.dart';
+import 'features/domain/usecases/user/create_user_usecase.dart';
+import 'features/domain/usecases/user/get_current_uid_usecase.dart';
+import 'features/domain/usecases/user/get_single_other_user_usecase.dart';
+import 'features/domain/usecases/user/get_single_user_usecase.dart';
+import 'features/domain/usecases/user/get_users_usecase.dart';
+import 'features/domain/usecases/user/is_sign_in_usecase.dart';
+import 'features/domain/usecases/user/sign_in_user_usecase.dart';
+import 'features/domain/usecases/user/sign_out_usecase.dart';
+import 'features/domain/usecases/user/sign_up_user_usecase.dart';
+import 'features/domain/usecases/user/update_user_usecase.dart';
 import 'features/domain/usecases/user/upload_image_to_storage_usecase.dart';
+import 'features/presentation/cubits/article/article_cubit.dart';
+import 'features/presentation/cubits/article/get_single_article/get_single_article_cubit.dart';
+import 'features/presentation/cubits/auth/auth_cubit.dart';
+import 'features/presentation/cubits/comment/comment_cubit.dart';
+import 'features/presentation/cubits/credential/credential_cubit.dart';
+import 'features/presentation/cubits/reply/reply_cubit.dart';
+import 'features/presentation/cubits/user/get_single_other_user/get_single_other_user_cubit.dart';
+import 'features/presentation/cubits/user/get_single_user/get_single_user_cubit.dart';
+import 'features/presentation/cubits/user/user_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -87,6 +99,28 @@ Future<void> init() async {
     ),
   );
 
+  // CommentCubit
+  sl.registerFactory(
+    () => CommentCubit(
+      createCommentUseCase: sl.call(),
+      readCommentsUseCase: sl.call(),
+      updateCommentUseCase: sl.call(),
+      deleteCommentUseCase: sl.call(),
+      likeCommentUseCase: sl.call(),
+    ),
+  );
+
+  // ReplyCubit
+  sl.registerFactory(
+    () => ReplyCubit(
+      createReplyUseCase: sl.call(),
+      readReplysUseCase: sl.call(),
+      updateReplyUseCase: sl.call(),
+      deleteReplyUseCase: sl.call(),
+      likeReplyUseCase: sl.call(),
+    ),
+  );
+
   // !-- Use Cases --!
 
   // user
@@ -127,6 +161,20 @@ Future<void> init() async {
       () => DeleteArticleUseCase(firebaseRepository: sl.call()));
   sl.registerLazySingleton(
       () => LikeArticleUseCase(firebaseRepository: sl.call()));
+
+  // Comment
+  sl.registerFactory(() => CreateCommentUseCase(firebaseRepository: sl.call()));
+  sl.registerFactory(() => ReadCommentsUseCase(firebaseRepository: sl.call()));
+  sl.registerFactory(() => UpdateCommentUseCase(firebaseRepository: sl.call()));
+  sl.registerFactory(() => DeleteCommentUseCase(firebaseRepository: sl.call()));
+  sl.registerFactory(() => LikeCommentUseCase(firebaseRepository: sl.call()));
+
+  // Reply
+  sl.registerFactory(() => CreateReplyUseCase(firebaseRepository: sl.call()));
+  sl.registerFactory(() => ReadReplysUseCase(firebaseRepository: sl.call()));
+  sl.registerFactory(() => UpdateReplyUseCase(firebaseRepository: sl.call()));
+  sl.registerFactory(() => DeleteReplyUseCase(firebaseRepository: sl.call()));
+  sl.registerFactory(() => LikeReplyUseCase(firebaseRepository: sl.call()));
 
   // !-- Repository --!
   sl.registerLazySingleton<FirebaseRepository>(

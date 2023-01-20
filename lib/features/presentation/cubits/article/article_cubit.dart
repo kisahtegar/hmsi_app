@@ -3,12 +3,13 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:hmsi_app/features/domain/entities/article/article_entity.dart';
-import 'package:hmsi_app/features/domain/usecases/article/create_article_usecase.dart';
-import 'package:hmsi_app/features/domain/usecases/article/delete_article_usecase.dart';
-import 'package:hmsi_app/features/domain/usecases/article/like_article_usecase.dart';
-import 'package:hmsi_app/features/domain/usecases/article/read_articles_usecase.dart';
-import 'package:hmsi_app/features/domain/usecases/article/update_article_usecase.dart';
+
+import '../../../domain/entities/article/article_entity.dart';
+import '../../../domain/usecases/article/create_article_usecase.dart';
+import '../../../domain/usecases/article/delete_article_usecase.dart';
+import '../../../domain/usecases/article/like_article_usecase.dart';
+import '../../../domain/usecases/article/read_articles_usecase.dart';
+import '../../../domain/usecases/article/update_article_usecase.dart';
 
 part 'article_state.dart';
 

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hmsi_app/features/domain/entities/app_entity.dart';
-import 'package:hmsi_app/features/domain/entities/article/article_entity.dart';
-import 'package:hmsi_app/features/presentation/cubits/article/article_cubit.dart';
-import 'package:hmsi_app/features/presentation/widgets/image_box_widget.dart';
-import 'package:hmsi_app/features/presentation/widgets/profile_widget.dart';
 
 import '../../../../../const.dart';
-import 'package:hmsi_app/injection_container.dart' as di;
-
+import '../../../../../injection_container.dart' as di;
+import '../../../../domain/entities/app_entity.dart';
+import '../../../../domain/entities/article/article_entity.dart';
 import '../../../../domain/usecases/user/get_current_uid_usecase.dart';
+import '../../../cubits/article/article_cubit.dart';
+import '../../../widgets/image_box_widget.dart';
+import '../../../widgets/profile_widget.dart';
 
 class SingleArticleWidget extends StatefulWidget {
   final ArticleEntity articleEntity;

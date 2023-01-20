@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:hmsi_app/features/domain/entities/app_entity.dart';
-import 'package:hmsi_app/features/domain/entities/article/article_entity.dart';
-import 'package:hmsi_app/features/domain/entities/user/user_entity.dart';
-import 'package:hmsi_app/features/presentation/pages/article/detail_article/detail_article_page.dart';
-import 'package:hmsi_app/features/presentation/pages/article/edit_article/edit_article_page.dart';
-import 'package:hmsi_app/features/presentation/pages/article/upload_article/upload_article_page.dart';
-import 'package:hmsi_app/features/presentation/pages/credential/sign_in_page.dart';
-import 'package:hmsi_app/features/presentation/pages/credential/sign_up_page.dart';
-import 'package:hmsi_app/features/presentation/pages/credential/welcome_page.dart';
-import 'package:hmsi_app/features/presentation/pages/profile/edit_profile_page.dart';
 
 import 'const.dart';
+import 'features/domain/entities/app_entity.dart';
+import 'features/domain/entities/article/article_entity.dart';
+import 'features/domain/entities/user/user_entity.dart';
+import 'features/presentation/pages/article/detail_article/detail_article_page.dart';
+import 'features/presentation/pages/article/edit_article/edit_article_page.dart';
+import 'features/presentation/pages/article/upload_article/upload_article_page.dart';
+import 'features/presentation/pages/credential/sign_in_page.dart';
+import 'features/presentation/pages/credential/sign_up_page.dart';
+import 'features/presentation/pages/credential/welcome_page.dart';
+import 'features/presentation/pages/profile/edit_profile_page.dart';
 
 class OnGenerateRoute {
   static Route<dynamic>? route(RouteSettings settings) {

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hmsi_app/const.dart';
-import 'package:hmsi_app/features/presentation/cubits/auth/auth_cubit.dart';
-import 'package:hmsi_app/features/presentation/cubits/credential/credential_cubit.dart';
-import 'package:hmsi_app/features/presentation/pages/credential/widgets/custom_clip_path_cred_widget.dart';
-import 'package:hmsi_app/features/presentation/pages/main_screen/main_screen.dart';
-import 'package:hmsi_app/features/presentation/widgets/button_container_widget.dart';
 
+import '../../../../const.dart';
+import '../../cubits/auth/auth_cubit.dart';
+import '../../cubits/credential/credential_cubit.dart';
+import '../../widgets/button_container_widget.dart';
 import '../../widgets/form_container_widget.dart';
 import '../../widgets/loading_button_container_widget.dart';
+import '../main_screen/main_screen.dart';
+import 'widgets/custom_clip_path_cred_widget.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});

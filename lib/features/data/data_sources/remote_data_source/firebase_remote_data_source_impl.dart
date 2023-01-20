@@ -4,12 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:hmsi_app/features/data/models/article/article_model.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../const.dart';
 import '../../../domain/entities/article/article_entity.dart';
+import '../../../domain/entities/comment/comment_entity.dart';
+import '../../../domain/entities/reply/reply_entity.dart';
 import '../../../domain/entities/user/user_entity.dart';
+import '../../models/article/article_model.dart';
+import '../../models/comment/comment_model.dart';
+import '../../models/reply/reply_model.dart';
 import '../../models/user/user_model.dart';
 import 'firebase_remote_data_source.dart';
 
@@ -299,5 +303,264 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     }
 
     articleCollection.doc(articleEntity.articleId).update(articleInfo);
+  }
+
+  @override
+  Future<void> createComment(CommentEntity commentEntity) async {
+    final commentCollection = firebaseFirestore
+        .collection(FirebaseConst.articles)
+        .doc(commentEntity.articleId)
+        .collection(FirebaseConst.comment);
+
+    final newComment = CommentModel(
+      commentId: commentEntity.commentId,
+      articleId: commentEntity.articleId,
+      creatorUid: commentEntity.creatorUid,
+      description: commentEntity.description,
+      username: commentEntity.username,
+      userProfileUrl: commentEntity.userProfileUrl,
+      createAt: commentEntity.createAt,
+      likes: const [],
+      totalLikes: commentEntity.totalLikes,
+      totalReply: commentEntity.totalReply,
+    ).toJson();
+
+    try {
+      final commentDocRef =
+          await commentCollection.doc(commentEntity.commentId).get();
+
+      if (!commentDocRef.exists) {
+        commentCollection.doc(commentEntity.commentId).set(newComment).then(
+          (value) {
+            final articleSelection = firebaseFirestore
+                .collection(FirebaseConst.articles)
+                .doc(commentEntity.articleId);
+
+            articleSelection.get().then((value) {
+              if (value.exists) {
+                final totalComments = value.get('totalComments');
+                articleSelection.update({"totalComments": totalComments + 1});
+                return;
+              }
+            });
+          },
+        );
+      } else {
+        commentCollection.doc(commentEntity.commentId).update(newComment);
+      }
+    } catch (e) {
+      toast("Some error occured");
+    }
+  }
+
+  @override
+  Future<void> deleteComment(CommentEntity commentEntity) async {
+    final commentCollection = firebaseFirestore
+        .collection(FirebaseConst.articles)
+        .doc(commentEntity.articleId)
+        .collection(FirebaseConst.comment);
+
+    try {
+      commentCollection.doc(commentEntity.commentId).delete().then((value) {
+        final articleCollection = firebaseFirestore
+            .collection(FirebaseConst.articles)
+            .doc(commentEntity.articleId);
+
+        articleCollection.get().then((value) {
+          if (value.exists) {
+            final totalComments = value.get('totalComments');
+            articleCollection.update({"totalComments": totalComments - 1});
+            return;
+          }
+        });
+      });
+    } catch (e) {
+      toast("Some error occured");
+    }
+  }
+
+  @override
+  Future<void> likeComment(CommentEntity commentEntity) async {
+    final commentCollection = firebaseFirestore
+        .collection(FirebaseConst.articles)
+        .doc(commentEntity.articleId)
+        .collection(FirebaseConst.comment);
+    final currentUid = await getCurrentUid();
+    final commentDocRef =
+        await commentCollection.doc(commentEntity.commentId).get();
+
+    if (commentDocRef.exists) {
+      List likes = commentDocRef.get("likes");
+      if (likes.contains(currentUid)) {
+        commentCollection.doc(commentEntity.commentId).update({
+          "likes": FieldValue.arrayRemove([currentUid])
+        });
+      } else {
+        commentCollection.doc(commentEntity.commentId).update({
+          "likes": FieldValue.arrayUnion([currentUid])
+        });
+      }
+    }
+  }
+
+  @override
+  Stream<List<CommentEntity>> readComments(String articleId) {
+    final commentCollection = firebaseFirestore
+        .collection(FirebaseConst.articles)
+        .doc(articleId)
+        .collection(FirebaseConst.comment)
+        .orderBy("createAt", descending: true);
+
+    return commentCollection.snapshots().map((querySnapshot) =>
+        querySnapshot.docs.map((e) => CommentModel.fromSnapshot(e)).toList());
+  }
+
+  @override
+  Future<void> updateComment(CommentEntity commentEntity) async {
+    final commentCollection = firebaseFirestore
+        .collection(FirebaseConst.articles)
+        .doc(commentEntity.articleId)
+        .collection(FirebaseConst.comment);
+
+    Map<String, dynamic> commentInfo = {};
+
+    if (commentEntity.description != "" && commentEntity.description != null) {
+      commentInfo['description'] = commentEntity.description;
+    }
+
+    commentCollection.doc(commentEntity.commentId).update(commentInfo);
+  }
+
+  @override
+  Future<void> createReply(ReplyEntity replyEntity) async {
+    final replyCollection = firebaseFirestore
+        .collection(FirebaseConst.articles)
+        .doc(replyEntity.articleId)
+        .collection(FirebaseConst.comment)
+        .doc(replyEntity.commentId)
+        .collection(FirebaseConst.reply);
+
+    final newReply = ReplyModel(
+      replyId: replyEntity.replyId,
+      commentId: replyEntity.commentId,
+      articleId: replyEntity.articleId,
+      creatorUid: replyEntity.creatorUid,
+      description: replyEntity.description,
+      username: replyEntity.username,
+      userProfileUrl: replyEntity.userProfileUrl,
+      createAt: replyEntity.createAt,
+      likes: const [],
+      totalLikes: replyEntity.totalLikes,
+    ).toJson();
+
+    try {
+      final replyDocRef = await replyCollection.doc(replyEntity.replyId).get();
+
+      if (!replyDocRef.exists) {
+        replyCollection.doc(replyEntity.replyId).set(newReply).then((value) {
+          final commentSelection = firebaseFirestore
+              .collection(FirebaseConst.articles)
+              .doc(replyEntity.articleId)
+              .collection(FirebaseConst.comment)
+              .doc(replyEntity.commentId);
+
+          commentSelection.get().then((value) {
+            if (value.exists) {
+              final totalReplys = value.get('totalReplys');
+              commentSelection.update({"totalReplys": totalReplys + 1});
+              return;
+            }
+          });
+        });
+      }
+    } catch (e) {
+      toast("Some error occured");
+    }
+  }
+
+  @override
+  Future<void> deleteReply(ReplyEntity replyEntity) async {
+    final replyCollection = firebaseFirestore
+        .collection(FirebaseConst.articles)
+        .doc(replyEntity.articleId)
+        .collection(FirebaseConst.comment)
+        .doc(replyEntity.commentId)
+        .collection(FirebaseConst.reply);
+
+    try {
+      replyCollection.doc(replyEntity.replyId).delete().then((value) {
+        final commentSelection = firebaseFirestore
+            .collection(FirebaseConst.articles)
+            .doc(replyEntity.articleId)
+            .collection(FirebaseConst.comment)
+            .doc(replyEntity.commentId);
+
+        commentSelection.get().then((value) {
+          if (value.exists) {
+            final totalReplys = value.get('totalReplys');
+            commentSelection.update({"totalReplys": totalReplys - 1});
+            return;
+          }
+        });
+      });
+    } catch (e) {
+      toast("Some error occured");
+    }
+  }
+
+  @override
+  Future<void> likeReply(ReplyEntity replyEntity) async {
+    final replyCollection = firebaseFirestore
+        .collection(FirebaseConst.articles)
+        .doc(replyEntity.articleId)
+        .collection(FirebaseConst.comment)
+        .doc(replyEntity.commentId)
+        .collection(FirebaseConst.reply);
+    final currentUid = await getCurrentUid();
+    final replyDocRef = await replyCollection.doc(replyEntity.replyId).get();
+
+    if (replyDocRef.exists) {
+      List likes = replyDocRef.get("likes");
+
+      if (likes.contains(currentUid)) {
+        replyCollection.doc(replyEntity.replyId).update({
+          "likes": FieldValue.arrayRemove([currentUid])
+        });
+      } else {
+        replyCollection.doc(replyEntity.replyId).update({
+          "likes": FieldValue.arrayUnion([currentUid])
+        });
+      }
+    }
+  }
+
+  @override
+  Stream<List<ReplyEntity>> readReplys(ReplyEntity replyEntity) {
+    final replyCollection = firebaseFirestore
+        .collection(FirebaseConst.articles)
+        .doc(replyEntity.articleId)
+        .collection(FirebaseConst.comment)
+        .doc(replyEntity.commentId)
+        .collection(FirebaseConst.reply);
+
+    return replyCollection.snapshots().map((querySnapshot) =>
+        querySnapshot.docs.map((e) => ReplyModel.fromSnapshot(e)).toList());
+  }
+
+  @override
+  Future<void> updateReply(ReplyEntity replyEntity) async {
+    final replyCollection = firebaseFirestore
+        .collection(FirebaseConst.articles)
+        .doc(replyEntity.articleId)
+        .collection(FirebaseConst.comment)
+        .doc(replyEntity.commentId)
+        .collection(FirebaseConst.reply);
+    Map<String, dynamic> replyInfo = {};
+
+    if (replyEntity.description != "" && replyEntity.description != null) {
+      replyInfo['description'] = replyEntity.description;
+    }
+
+    replyCollection.doc(replyEntity.replyId).update(replyInfo);
   }
 }
