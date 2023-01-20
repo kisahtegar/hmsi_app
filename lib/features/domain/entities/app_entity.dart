@@ -1,5 +1,5 @@
-import 'package:hmsi_app/features/domain/entities/article/article_entity.dart';
-import 'package:hmsi_app/features/domain/entities/user/user_entity.dart';
+import 'article/article_entity.dart';
+import 'user/user_entity.dart';
 
 class AppEntity {
   final UserEntity? currentUser;

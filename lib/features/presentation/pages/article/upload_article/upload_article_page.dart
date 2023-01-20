@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hmsi_app/features/presentation/cubits/article/article_cubit.dart';
-import 'package:hmsi_app/features/presentation/pages/article/upload_article/widget/upload_article_main_widget.dart';
 
+import '../../../../../injection_container.dart' as di;
 import '../../../../domain/entities/user/user_entity.dart';
-import 'package:hmsi_app/injection_container.dart' as di;
+import '../../../cubits/article/article_cubit.dart';
+import 'widget/upload_article_main_widget.dart';
 
 class UploadArticlePage extends StatelessWidget {
   final UserEntity currentUser;

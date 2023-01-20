@@ -1,9 +1,11 @@
 import 'dart:io';
 
-import 'package:hmsi_app/features/data/data_sources/remote_data_source/firebase_remote_data_source.dart';
-import 'package:hmsi_app/features/domain/entities/article/article_entity.dart';
-import 'package:hmsi_app/features/domain/entities/user/user_entity.dart';
-import 'package:hmsi_app/features/domain/repositories/firebase_repository.dart';
+import '../../domain/entities/article/article_entity.dart';
+import '../../domain/entities/comment/comment_entity.dart';
+import '../../domain/entities/reply/reply_entity.dart';
+import '../../domain/entities/user/user_entity.dart';
+import '../../domain/repositories/firebase_repository.dart';
+import '../data_sources/remote_data_source/firebase_remote_data_source.dart';
 
 class FirebaseRepositoryImpl implements FirebaseRepository {
   final FirebaseRemoteDataSource firebaseRemoteDataSource;
@@ -76,4 +78,44 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   @override
   Stream<List<ArticleEntity>> readSingleArticle(String articleId) =>
       firebaseRemoteDataSource.readSingleArticle(articleId);
+
+  @override
+  Future<void> createComment(CommentEntity commentEntity) async =>
+      firebaseRemoteDataSource.createComment(commentEntity);
+
+  @override
+  Future<void> deleteComment(CommentEntity commentEntity) async =>
+      firebaseRemoteDataSource.deleteComment(commentEntity);
+
+  @override
+  Future<void> likeComment(CommentEntity commentEntity) async =>
+      firebaseRemoteDataSource.likeComment(commentEntity);
+
+  @override
+  Stream<List<CommentEntity>> readComments(String articleId) =>
+      firebaseRemoteDataSource.readComments(articleId);
+
+  @override
+  Future<void> updateComment(CommentEntity commentEntity) async =>
+      firebaseRemoteDataSource.updateComment(commentEntity);
+
+  @override
+  Future<void> createReply(ReplyEntity replyEntity) async =>
+      firebaseRemoteDataSource.createReply(replyEntity);
+
+  @override
+  Future<void> deleteReply(ReplyEntity replyEntity) async =>
+      firebaseRemoteDataSource.deleteReply(replyEntity);
+
+  @override
+  Future<void> likeReply(ReplyEntity replyEntity) async =>
+      firebaseRemoteDataSource.likeReply(replyEntity);
+
+  @override
+  Stream<List<ReplyEntity>> readReplys(ReplyEntity replyEntity) =>
+      firebaseRemoteDataSource.readReplys(replyEntity);
+
+  @override
+  Future<void> updateReply(ReplyEntity replyEntity) async =>
+      firebaseRemoteDataSource.updateReply(replyEntity);
 }

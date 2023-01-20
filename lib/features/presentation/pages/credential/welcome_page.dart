@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hmsi_app/const.dart';
 
+import '../../../../const.dart';
 import '../../widgets/button_container_widget.dart';
 
 class WelcomePage extends StatelessWidget {

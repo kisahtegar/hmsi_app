@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:hmsi_app/const.dart';
-import 'package:hmsi_app/features/domain/entities/user/user_entity.dart';
-import 'package:hmsi_app/features/presentation/cubits/user/user_cubit.dart';
-import 'package:hmsi_app/injection_container.dart' as di;
-
+import '../../../../const.dart';
+import '../../../../injection_container.dart' as di;
+import '../../../domain/entities/user/user_entity.dart';
 import '../../../domain/usecases/user/upload_image_to_storage_usecase.dart';
+import '../../cubits/user/user_cubit.dart';
 import '../../widgets/profile_widget.dart';
 import 'widget/form_edit_widget.dart';
 

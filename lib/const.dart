@@ -67,6 +67,8 @@ class PageConst {
 class FirebaseConst {
   static const String users = 'users';
   static const String articles = 'articles';
+  static const String comment = 'comment';
+  static const String reply = 'reply';
 }
 
 void toast(String message) {

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hmsi_app/features/domain/entities/article/article_entity.dart';
-import 'package:hmsi_app/features/domain/entities/user/user_entity.dart';
-import 'package:hmsi_app/features/presentation/cubits/article/article_cubit.dart';
 
 import '../../../../const.dart';
+import '../../../../injection_container.dart' as di;
+import '../../../domain/entities/article/article_entity.dart';
+import '../../../domain/entities/user/user_entity.dart';
+import '../../cubits/article/article_cubit.dart';
 import 'widget/single_article_widget.dart';
-import 'package:hmsi_app/injection_container.dart' as di;
 
 class ArticlePage extends StatelessWidget {
   final UserEntity currentUser;

@@ -4,18 +4,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hmsi_app/features/domain/entities/article/article_entity.dart';
-import 'package:hmsi_app/features/domain/entities/user/user_entity.dart';
-import 'package:hmsi_app/features/presentation/cubits/article/article_cubit.dart';
-import 'package:hmsi_app/features/presentation/pages/profile/widget/form_edit_widget.dart';
-import 'package:hmsi_app/features/presentation/widgets/image_box_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../../../const.dart';
-import 'package:hmsi_app/injection_container.dart' as di;
-
+import '../../../../../../injection_container.dart' as di;
+import '../../../../../domain/entities/article/article_entity.dart';
+import '../../../../../domain/entities/user/user_entity.dart';
 import '../../../../../domain/usecases/user/upload_image_to_storage_usecase.dart';
+import '../../../../cubits/article/article_cubit.dart';
+import '../../../../widgets/image_box_widget.dart';
+import '../../../profile/widget/form_edit_widget.dart';
 
 class UploadArticleMainWidget extends StatefulWidget {
   final UserEntity currentUser;

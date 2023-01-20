@@ -1,16 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:hmsi_app/features/presentation/pages/credential/welcome_page.dart';
+
 import 'features/presentation/cubits/auth/auth_cubit.dart';
 import 'features/presentation/cubits/credential/credential_cubit.dart';
 import 'features/presentation/cubits/user/get_single_other_user/get_single_other_user_cubit.dart';
 import 'features/presentation/cubits/user/get_single_user/get_single_user_cubit.dart';
 import 'features/presentation/cubits/user/user_cubit.dart';
+import 'features/presentation/pages/credential/welcome_page.dart';
 import 'features/presentation/pages/main_screen/main_screen.dart';
 import 'firebase_options.dart';
-import 'on_generate_route.dart';
 import 'injection_container.dart' as di;
+import 'on_generate_route.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
