@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'const.dart';
-import 'features/domain/entities/app_entity.dart';
 import 'features/domain/entities/article/article_entity.dart';
 import 'features/domain/entities/user/user_entity.dart';
 import 'features/presentation/pages/article/detail_article/detail_article_page.dart';
@@ -40,8 +39,8 @@ class OnGenerateRoute {
         }
 
       case PageConst.detailArticlePage:
-        if (args is AppEntity) {
-          return routeBuilder(DetailArticlePage(appEntity: args));
+        if (args is String) {
+          return routeBuilder(DetailArticlePage(articleId: args));
         } else {
           return routeBuilder(const NoPageFound());
         }

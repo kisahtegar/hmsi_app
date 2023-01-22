@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 import '../../../domain/entities/user/user_entity.dart';
 import '../../../domain/usecases/user/get_users_usecase.dart';
@@ -22,7 +23,10 @@ class UserCubit extends Cubit<UserState> {
     emit(UserLoading());
     try {
       final streamResponse = getUsersUseCase.call(userEntity);
-      streamResponse.listen((users) {
+      streamResponse.listen((users) async {
+        debugPrint("UserCubit[getUsers]: emit(UserLoaded())");
+        await Future.delayed(const Duration(milliseconds: 1));
+        if (isClosed) return;
         emit(UserLoaded(users: users));
       });
     } on SocketException catch (_) {

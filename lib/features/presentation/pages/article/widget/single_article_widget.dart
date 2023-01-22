@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../const.dart';
 import '../../../../../injection_container.dart' as di;
-import '../../../../domain/entities/app_entity.dart';
 import '../../../../domain/entities/article/article_entity.dart';
 import '../../../../domain/usecases/user/get_current_uid_usecase.dart';
 import '../../../cubits/article/article_cubit.dart';
@@ -66,11 +65,7 @@ class _SingleArticleWidgetState extends State<SingleArticleWidget> {
                     Navigator.pushNamed(
                       context,
                       PageConst.detailArticlePage,
-                      arguments: AppEntity(
-                        uid: _currentUid,
-                        articleId: widget.articleEntity.articleId,
-                        creatorUid: widget.articleEntity.creatorUid,
-                      ),
+                      arguments: widget.articleEntity.articleId,
                     );
                   },
                   child: Ink(

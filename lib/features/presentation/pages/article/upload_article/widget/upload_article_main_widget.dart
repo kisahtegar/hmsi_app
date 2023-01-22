@@ -185,6 +185,7 @@ class _UploadArticleMainWidgetState extends State<UploadArticleMainWidget> {
   }
 
   void _submitArticle() {
+    FocusScope.of(context).unfocus();
     if (_image == null) {
       toast("Image cannot be empty");
       // return;

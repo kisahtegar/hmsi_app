@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 import '../../../domain/entities/comment/comment_entity.dart';
 import '../../../domain/usecases/comment/create_comment_usecase.dart';
@@ -39,9 +40,13 @@ class CommentCubit extends Cubit<CommentState> {
 
   Future<void> getComments({required String articleId}) async {
     emit(CommentLoading());
+    await Future.delayed(const Duration(seconds: 1));
     try {
       final streamResponse = readCommentsUseCase.call(articleId);
-      streamResponse.listen((comments) {
+      streamResponse.listen((comments) async {
+        debugPrint("CommentCubit[getComments]: emit(CommentLoaded())");
+        await Future.delayed(const Duration(milliseconds: 1));
+        if (isClosed) return;
         emit(CommentLoaded(comments: comments));
       });
     } on SocketException catch (_) {

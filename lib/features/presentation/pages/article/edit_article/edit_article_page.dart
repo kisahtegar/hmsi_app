@@ -16,9 +16,5 @@ class EditArticlePage extends StatelessWidget {
       value: di.sl<ArticleCubit>(),
       child: EditArticleMainWidget(article: article),
     );
-    // return BlocProvider<ArticleCubit>(
-    //   create: (context) => di.sl<ArticleCubit>(),
-    //   child: EditArticleMainWidget(article: article),
-    // );
   }
 }
