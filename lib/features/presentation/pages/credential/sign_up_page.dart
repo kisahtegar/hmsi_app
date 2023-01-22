@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../const.dart';
@@ -122,6 +123,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   iconsField: Icons.person,
                   hintText: "Username",
                   maxLength: 25,
+                  textCapitalization: TextCapitalization.none,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
                 ),
                 AppSize.sizeVer(size.height * 0.01),
 
@@ -131,6 +136,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   iconsField: Icons.email,
                   hintText: "E-Mail",
                   inputType: TextInputType.emailAddress,
+                  textCapitalization: TextCapitalization.none,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
                 ),
                 AppSize.sizeVer(size.height * 0.01),
 
@@ -140,6 +149,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   iconsField: Icons.password,
                   hintText: "Password",
                   isPasswordField: true,
+                  textCapitalization: TextCapitalization.none,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
                 ),
                 AppSize.sizeVer(size.height * 0.19),
 
@@ -201,8 +214,8 @@ class _SignUpPageState extends State<SignUpPage> {
     BlocProvider.of<CredentialCubit>(context)
         .signUpUser(
             userEntity: UserEntity(
-      username: _usernameController.text,
-      email: _emailController.text,
+      username: _usernameController.text.toLowerCase(),
+      email: _emailController.text.toLowerCase(),
       password: _passwordController.text,
       name: "",
       npm: "",

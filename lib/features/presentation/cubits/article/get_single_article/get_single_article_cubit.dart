@@ -19,16 +19,13 @@ class GetSingleArticleCubit extends Cubit<GetSingleArticleState> {
     emit(GetSingleArticleLoading());
     try {
       final streamResponse = readSingleArticleUseCase.call(articleId);
-      streamResponse.listen(
-        (articles) {
-          emit(GetSingleArticleLoaded(article: articles.first));
-        },
-        onError: (e, s) {
-          debugPrint(
-              "ArticleCubit[getArticles]: Error while listen to streamResponse");
-          return;
-        },
-      );
+      streamResponse.listen((articles) async {
+        debugPrint(
+            "GetSingleArticleCubit[getSingleAricle]: emit(GetSingleArticleLoaded())");
+        await Future.delayed(const Duration(milliseconds: 1));
+        if (isClosed) return;
+        emit(GetSingleArticleLoaded(article: articles.first));
+      });
     } on SocketException catch (_) {
       emit(GetSingleArticleFailure());
     } catch (_) {

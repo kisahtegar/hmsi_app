@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 import '../../../domain/entities/reply/reply_entity.dart';
 import '../../../domain/usecases/reply/create_reply_usecase.dart';
@@ -39,9 +40,13 @@ class ReplyCubit extends Cubit<ReplyState> {
 
   Future<void> getReplys({required ReplyEntity replyEntity}) async {
     emit(ReplyLoading());
+    await Future.delayed(const Duration(microseconds: 1));
     try {
       final streamResponse = readReplysUseCase.call(replyEntity);
-      streamResponse.listen((replys) {
+      streamResponse.listen((replys) async {
+        debugPrint("ReplyCubit[getReplys]: emit(ReplyLoaded())");
+        await Future.delayed(const Duration(milliseconds: 1));
+        if (isClosed) return;
         emit(ReplyLoaded(replys: replys));
       });
     } on SocketException catch (_) {

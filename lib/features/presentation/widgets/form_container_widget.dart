@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../const.dart';
 
@@ -15,6 +16,8 @@ class FormContainerWidget extends StatefulWidget {
   final String? helperText;
   final IconData? iconsField;
   final int? maxLength;
+  final List<TextInputFormatter>? inputFormatters;
+  final TextCapitalization textCapitalization;
 
   const FormContainerWidget({
     Key? key,
@@ -30,6 +33,8 @@ class FormContainerWidget extends StatefulWidget {
     this.helperText,
     this.iconsField,
     this.maxLength,
+    this.inputFormatters,
+    this.textCapitalization = TextCapitalization.none,
   }) : super(key: key);
 
   @override
@@ -58,6 +63,8 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
           validator: widget.validator,
           onFieldSubmitted: widget.onFieldSubmitted,
           maxLength: widget.maxLength,
+          inputFormatters: widget.inputFormatters,
+          textCapitalization: widget.textCapitalization,
           decoration: InputDecoration(
             icon: Icon(
               widget.iconsField,

@@ -39,7 +39,7 @@ class CommentModel extends CommentEntity {
       createAt: snapshot['createAt'],
       likes: List.from(snap.get("likes")),
       totalLikes: snapshot['totalLikes'],
-      totalReply: snapshot['totalReply'],
+      totalReply: snapshot['totalReplys'],
     );
   }
 
@@ -53,6 +53,6 @@ class CommentModel extends CommentEntity {
         "createAt": createAt,
         "likes": likes,
         "totalLikes": totalLikes,
-        "totalReply": totalReply,
+        "totalReplys": totalReply,
       };
 }

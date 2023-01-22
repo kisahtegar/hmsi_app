@@ -1,12 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../../../../const.dart';
 import '../../../../../../injection_container.dart' as di;
 import '../../../../../domain/entities/app_entity.dart';
 import '../../../../../domain/entities/article/article_entity.dart';
-import '../../../../../domain/usecases/user/get_current_uid_usecase.dart';
+import '../../../../../domain/entities/comment/comment_entity.dart';
+import '../../../../../domain/entities/user/user_entity.dart';
 import '../../../../cubits/article/article_cubit.dart';
 import '../../../../cubits/article/get_single_article/get_single_article_cubit.dart';
 import '../../../../cubits/comment/comment_cubit.dart';
@@ -15,11 +18,10 @@ import '../../../../cubits/user/get_single_user/get_single_user_cubit.dart';
 import '../../../../widgets/image_box_widget.dart';
 import '../../../../widgets/more_menu_button_widget.dart';
 import '../../../../widgets/profile_widget.dart';
-import '../comment/widget/comment_bottom_sheet_widget.dart';
 
 class DetailArticleMainWidget extends StatefulWidget {
-  final String articleId;
-  const DetailArticleMainWidget({super.key, required this.articleId});
+  final AppEntity appEntity;
+  const DetailArticleMainWidget({super.key, required this.appEntity});
 
   @override
   State<DetailArticleMainWidget> createState() =>
@@ -27,38 +29,60 @@ class DetailArticleMainWidget extends StatefulWidget {
 }
 
 class _DetailArticleMainWidgetState extends State<DetailArticleMainWidget> {
-  String _currentUid = "";
+  final TextEditingController _commentController = TextEditingController();
 
   @override
   void initState() {
+    BlocProvider.of<GetSingleUserCubit>(context)
+        .getSingleUser(uid: widget.appEntity.uid!);
     BlocProvider.of<GetSingleArticleCubit>(context)
-        .getSingleAricle(articleId: widget.articleId);
-    di.sl<GetCurrentUidUseCase>().call().then((value) {
-      setState(() {
-        _currentUid = value;
-      });
-    });
+        .getSingleAricle(articleId: widget.appEntity.articleId!);
+    _commentController.addListener(changesOnField);
+    BlocProvider.of<CommentCubit>(context)
+        .getComments(articleId: widget.appEntity.articleId!);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("DetailArticlePage[build]: Building!!");
     Size size = MediaQuery.of(context).size;
-    BuildContext mainContext = context;
-    return BlocBuilder<GetSingleArticleCubit, GetSingleArticleState>(
-      builder: (context, singleArticleState) {
-        if (singleArticleState is GetSingleArticleLoaded) {
-          final singleArticle = singleArticleState.article;
-          return _bodyWidget(mainContext, singleArticle, size);
+    return BlocBuilder<GetSingleUserCubit, GetSingleUserState>(
+      builder: (context, singleUserState) {
+        if (singleUserState is GetSingleUserLoaded) {
+          final singleUser = singleUserState.user;
+          return BlocBuilder<GetSingleArticleCubit, GetSingleArticleState>(
+            builder: (context, singleArticleState) {
+              if (singleArticleState is GetSingleArticleLoaded) {
+                final singleArticle = singleArticleState.article;
+                return BlocBuilder<CommentCubit, CommentState>(
+                  builder: (context, commentState) {
+                    if (commentState is CommentLoaded) {
+                      final commentArticle = commentState.comments;
+                      return _bodyWidget(
+                          singleUser, singleArticle, size, commentArticle);
+                    }
+                    return const Center(child: CircularProgressIndicator());
+                  },
+                );
+              }
+              return const Center(child: CircularProgressIndicator());
+            },
+          );
         }
         return const Center(child: CircularProgressIndicator());
       },
     );
   }
 
-  Widget _bodyWidget(
-      BuildContext mainContext, ArticleEntity singleArticle, Size size) {
+  Widget _bodyWidget(UserEntity singleUser, ArticleEntity singleArticle,
+      Size size, List<CommentEntity> commentArticle) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
@@ -184,37 +208,8 @@ class _DetailArticleMainWidgetState extends State<DetailArticleMainWidget> {
                   child: Material(
                     child: InkWell(
                       onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          //NOTE: Waiting useSafeArea feature in flutter 3.4
-                          shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(20))),
-                          builder: (_) {
-                            return MultiBlocProvider(
-                              providers: [
-                                BlocProvider<ReplyCubit>(
-                                  create: (context) => di.sl<ReplyCubit>(),
-                                ),
-                                BlocProvider<CommentCubit>(
-                                  create: (context) => di.sl<CommentCubit>(),
-                                ),
-                                BlocProvider<GetSingleUserCubit>(
-                                  create: (context) =>
-                                      di.sl<GetSingleUserCubit>(),
-                                ),
-                              ],
-                              child: CommentBottomSheet(
-                                context: mainContext,
-                                appEntity: AppEntity(
-                                  uid: _currentUid,
-                                  articleId: singleArticle.articleId,
-                                ),
-                              ),
-                            );
-                          },
-                        );
+                        _showModalBottomSheetComments(
+                            context, singleUser, commentArticle);
                       },
                       child: Ink(
                         width: double.infinity,
@@ -296,6 +291,10 @@ class _DetailArticleMainWidgetState extends State<DetailArticleMainWidget> {
     );
   }
 
+  changesOnField() {
+    setState(() {}); // Will re-Trigger Build Method
+  }
+
   void _showModalBottomSheetOptions(
       BuildContext context, ArticleEntity article) {
     showModalBottomSheet(
@@ -333,9 +332,7 @@ class _DetailArticleMainWidgetState extends State<DetailArticleMainWidget> {
                 textColor: AppColor.primaryColor,
               ),
               MoreMenuButtonWidget(
-                onTap: () {
-                  _deleteArticle(articleEntity: article);
-                },
+                onTap: _deleteArticle,
                 icon: Icons.delete,
                 text: "Delete Article",
                 iconColor: Colors.red,
@@ -348,15 +345,232 @@ class _DetailArticleMainWidgetState extends State<DetailArticleMainWidget> {
     );
   }
 
-  _deleteArticle({required ArticleEntity articleEntity}) {
+  _deleteArticle() {
     Navigator.pop(context);
     BlocProvider.of<ArticleCubit>(context)
         .deleteArticle(
           articleEntity: ArticleEntity(
-            articleId: widget.articleId,
-            creatorUid: articleEntity.creatorUid,
+            articleId: widget.appEntity.articleId,
+            creatorUid: widget.appEntity.creatorUid,
           ),
         )
         .then((_) => Navigator.pop(context));
+  }
+
+  _createComment(UserEntity currentUser) {
+    BlocProvider.of<CommentCubit>(context)
+        .createComment(
+      commentEntity: CommentEntity(
+        commentId: const Uuid().v1(),
+        articleId: widget.appEntity.articleId,
+        creatorUid: currentUser.uid,
+        description: _commentController.text,
+        username: currentUser.username,
+        userProfileUrl: currentUser.profileUrl,
+        createAt: Timestamp.now(),
+        likes: const [],
+        totalLikes: 0,
+        totalReply: 0,
+      ),
+    )
+        .then((value) {
+      setState(() {
+        _commentController.clear();
+      });
+    });
+  }
+
+  void _showModalBottomSheetComments(BuildContext context,
+      UserEntity singleUser, List<CommentEntity> commentArticle) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (context) {
+        return FractionallySizedBox(
+          heightFactor: 0.9,
+          child: Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // [Row]: Comment title and close comment.
+                AppSize.sizeVer(15),
+                Center(
+                  child: Container(
+                    width: 50,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                ),
+                AppSize.sizeVer(10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Comment",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: AppColor.primaryColor,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: Icon(
+                          Icons.close,
+                          size: 28,
+                          color: AppColor.primaryColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                AppSize.sizeVer(9),
+                const Divider(thickness: 1),
+
+                // [List]: Comment output.
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: commentArticle.length,
+                    itemBuilder: (context, index) {
+                      final singleComment = commentArticle[index];
+                      return BlocProvider<ReplyCubit>(
+                        create: (context) => di.sl<ReplyCubit>(),
+                        child: SingleCommentWidget(
+                          comment: singleComment,
+                          currentUser: singleUser,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+                // [TextField]: Comment form.
+                const Divider(thickness: 1, height: 0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 10),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 35,
+                        height: 35,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: profileWidget(),
+                        ),
+                      ),
+                      AppSize.sizeHor(15),
+                      Expanded(
+                        child: TextFormField(
+                          controller: _commentController,
+                          decoration: const InputDecoration(
+                            hintText: "Add comments",
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                      _commentController.text.isNotEmpty
+                          ? InkWell(
+                              onTap: () {
+                                _createComment(singleUser);
+                              },
+                              child: const Icon(
+                                Icons.send,
+                                color: Colors.blue,
+                              ),
+                            )
+                          : const SizedBox(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class SingleCommentWidget extends StatelessWidget {
+  final CommentEntity comment;
+  final UserEntity? currentUser;
+  final VoidCallback? onMoreClickListener;
+
+  const SingleCommentWidget({
+    Key? key,
+    required this.comment,
+    this.currentUser,
+    this.onMoreClickListener,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 35,
+            height: 35,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: profileWidget(
+                imageUrl: comment.userProfileUrl,
+              ),
+            ),
+          ),
+          AppSize.sizeHor(10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${comment.username}",
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                AppSize.sizeVer(2),
+                Text(
+                  // NOTE: Maximum comment length 500
+                  "${comment.description}",
+                ),
+                AppSize.sizeVer(8),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.favorite_outline,
+                      color: Colors.grey,
+                    ),
+                    AppSize.sizeHor(5),
+                    const Text("0"),
+                    AppSize.sizeHor(20),
+                    const Icon(
+                      Icons.comment_outlined,
+                      color: Colors.grey,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          AppSize.sizeHor(10),
+          const Icon(Icons.more_vert),
+        ],
+      ),
+    );
   }
 }

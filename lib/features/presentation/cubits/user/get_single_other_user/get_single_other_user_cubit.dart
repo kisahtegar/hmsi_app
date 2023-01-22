@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 import '../../../../domain/entities/user/user_entity.dart';
 import '../../../../domain/usecases/user/get_single_other_user_usecase.dart';
@@ -18,7 +19,11 @@ class GetSingleOtherUserCubit extends Cubit<GetSingleOtherUserState> {
     emit(GetSingleOtherUserLoading());
     try {
       final streamResponse = getSingleOtherUserUseCase.call(otherUid);
-      streamResponse.listen((users) {
+      streamResponse.listen((users) async {
+        debugPrint(
+            "GetSingleOtherUserCubit[getSingleOtherUser]: emit(GetSingleOtherUserLoaded())");
+        await Future.delayed(const Duration(milliseconds: 1));
+        if (isClosed) return;
         emit(GetSingleOtherUserLoaded(otherUser: users.first));
       });
     } on SocketException catch (_) {

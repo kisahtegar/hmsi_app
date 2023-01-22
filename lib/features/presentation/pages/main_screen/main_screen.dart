@@ -5,9 +5,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../const.dart';
 import '../../cubits/user/get_single_user/get_single_user_cubit.dart';
-import '../notification/notification_page.dart';
-import '../home/home_page.dart';
 import '../article/article_page.dart';
+import '../home/home_page.dart';
+import '../notification/notification_page.dart';
 import '../profile/profile_page.dart';
 
 class MainScreen extends StatefulWidget {
@@ -25,6 +25,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     BlocProvider.of<GetSingleUserCubit>(context).getSingleUser(uid: widget.uid);
+    // BlocProvider.of<ArticleCubit>(context).close();
     pageController = PageController();
     super.initState();
   }

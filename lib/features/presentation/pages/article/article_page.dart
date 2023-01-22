@@ -44,8 +44,8 @@ class ArticlePage extends StatelessWidget {
               : const SizedBox(),
         ],
       ),
-      body: BlocProvider<ArticleCubit>(
-        create: (context) => di.sl<ArticleCubit>()
+      body: BlocProvider<ArticleCubit>.value(
+        value: di.sl<ArticleCubit>()
           ..getArticles(articleEntity: const ArticleEntity()),
         child: BlocBuilder<ArticleCubit, ArticleState>(
           builder: (context, articleState) {

@@ -231,7 +231,30 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         firebaseFirestore.collection(FirebaseConst.articles);
 
     try {
-      articleCollection.doc(articleEntity.articleId).delete();
+      // This logic will deleting Collection document reply and comment because if you
+      // delete article document, cannot automatically delete subCollection.
+      articleCollection.doc(articleEntity.articleId).delete().then((_) {
+        articleCollection
+            .doc(articleEntity.articleId)
+            .collection(FirebaseConst.comment)
+            .get()
+            .then((value) {
+          for (var doc in value.docs) {
+            doc.reference.delete();
+            articleCollection
+                .doc(articleEntity.articleId)
+                .collection(FirebaseConst.comment)
+                .doc(doc.reference.id)
+                .collection(FirebaseConst.reply)
+                .get()
+                .then((value) {
+              for (var doc in value.docs) {
+                doc.reference.delete();
+              }
+            });
+          }
+        });
+      });
     } catch (e) {
       toast("some error occured");
     }
@@ -391,13 +414,16 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
     if (commentDocRef.exists) {
       List likes = commentDocRef.get("likes");
+      final totalLikes = commentDocRef.get("totalLikes");
       if (likes.contains(currentUid)) {
         commentCollection.doc(commentEntity.commentId).update({
-          "likes": FieldValue.arrayRemove([currentUid])
+          "likes": FieldValue.arrayRemove([currentUid]),
+          "totalLikes": totalLikes - 1,
         });
       } else {
         commentCollection.doc(commentEntity.commentId).update({
-          "likes": FieldValue.arrayUnion([currentUid])
+          "likes": FieldValue.arrayUnion([currentUid]),
+          "totalLikes": totalLikes + 1,
         });
       }
     }
@@ -521,14 +547,17 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
     if (replyDocRef.exists) {
       List likes = replyDocRef.get("likes");
+      final totalLikes = replyDocRef.get("totalLikes");
 
       if (likes.contains(currentUid)) {
         replyCollection.doc(replyEntity.replyId).update({
-          "likes": FieldValue.arrayRemove([currentUid])
+          "likes": FieldValue.arrayRemove([currentUid]),
+          "totalLikes": totalLikes - 1,
         });
       } else {
         replyCollection.doc(replyEntity.replyId).update({
-          "likes": FieldValue.arrayUnion([currentUid])
+          "likes": FieldValue.arrayUnion([currentUid]),
+          "totalLikes": totalLikes + 1,
         });
       }
     }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -20,12 +21,15 @@ class ArticleCubit extends Cubit<ArticleState> {
   final DeleteArticleUseCase deleteArticleUseCase;
   final LikeArticleUseCase likeArticleUseCase;
 
+  StreamSubscription<List<ArticleEntity>>? sub;
+
   ArticleCubit({
     required this.createArticleUseCase,
     required this.readArticlesUseCase,
     required this.updateArticleUseCase,
     required this.deleteArticleUseCase,
     required this.likeArticleUseCase,
+    this.sub,
   }) : super(ArticleInitial());
 
   Future<void> createArticle({required ArticleEntity articleEntity}) async {
@@ -42,12 +46,20 @@ class ArticleCubit extends Cubit<ArticleState> {
     emit(ArticleLoading());
     try {
       final streamResponse = readArticlesUseCase.call(articleEntity);
-      streamResponse.listen(
-        (articles) {
-          debugPrint("ArticleCubit[getArticles]: emit(ArticleLoaded())");
-          emit(ArticleLoaded(articles: articles));
-        },
-      );
+      await sub?.cancel();
+      sub = streamResponse.listen((articles) async {
+        debugPrint("ArticleCubit[getArticles]: emit(ArticleLoaded())");
+        await Future.delayed(const Duration(milliseconds: 1));
+        if (isClosed) return;
+        emit(ArticleLoaded(articles: articles));
+      });
+
+      // streamResponse.listen((articles) async {
+      //   debugPrint("ArticleCubit[getArticles]: emit(ArticleLoaded())");
+      //   await Future.delayed(const Duration(milliseconds: 1));
+      //   if (isClosed) return;
+      //   emit(ArticleLoaded(articles: articles));
+      // });
     } on SocketException catch (_) {
       emit(ArticleFailure());
     } catch (_) {
@@ -83,5 +95,11 @@ class ArticleCubit extends Cubit<ArticleState> {
     } catch (_) {
       emit(ArticleFailure());
     }
+  }
+
+  @override
+  Future<void> close() async {
+    await sub?.cancel();
+    return super.close();
   }
 }
