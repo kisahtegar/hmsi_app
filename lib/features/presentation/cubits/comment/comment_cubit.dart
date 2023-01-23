@@ -40,7 +40,6 @@ class CommentCubit extends Cubit<CommentState> {
 
   Future<void> getComments({required String articleId}) async {
     emit(CommentLoading());
-    await Future.delayed(const Duration(seconds: 1));
     try {
       final streamResponse = readCommentsUseCase.call(articleId);
       streamResponse.listen((comments) async {

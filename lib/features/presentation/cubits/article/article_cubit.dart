@@ -29,7 +29,7 @@ class ArticleCubit extends Cubit<ArticleState> {
     required this.updateArticleUseCase,
     required this.deleteArticleUseCase,
     required this.likeArticleUseCase,
-    this.sub,
+    // this.sub,
   }) : super(ArticleInitial());
 
   Future<void> createArticle({required ArticleEntity articleEntity}) async {

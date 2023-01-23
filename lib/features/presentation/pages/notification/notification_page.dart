@@ -28,11 +28,48 @@ class _NotificationPageState extends State<NotificationPage> {
           style: TextStyle(color: AppColor.primaryColor, fontSize: 25),
         ),
       ),
-      body: const Center(
-        child: Text(
-          "Notifications Page",
-          style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-        ),
+      body: _noNotificationWidget(),
+    );
+  }
+
+  Widget _noNotificationWidget() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(30),
+            decoration: BoxDecoration(
+              color: Colors.blue.shade100,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.notifications_off,
+              color: Colors.black,
+              size: 150,
+            ),
+          ),
+          AppSize.sizeVer(25),
+          const Text(
+            "No Notification Yet!",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 23,
+              fontWeight: FontWeight.bold,
+              // color: ,
+            ),
+          ),
+          AppSize.sizeVer(15),
+          const Text(
+            "There is no notification at this time, \nplease come back later.",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.black54,
+            ),
+          ),
+        ],
       ),
     );
   }

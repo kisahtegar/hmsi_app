@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../const.dart';
 import '../../../../injection_container.dart' as di;
@@ -44,8 +45,8 @@ class ArticlePage extends StatelessWidget {
               : const SizedBox(),
         ],
       ),
-      body: BlocProvider<ArticleCubit>.value(
-        value: di.sl<ArticleCubit>()
+      body: BlocProvider<ArticleCubit>(
+        create: (context) => di.sl<ArticleCubit>()
           ..getArticles(articleEntity: const ArticleEntity()),
         child: BlocBuilder<ArticleCubit, ArticleState>(
           builder: (context, articleState) {
@@ -60,15 +61,16 @@ class ArticlePage extends StatelessWidget {
             }
             if (articleState is ArticleLoaded) {
               return articleState.articles.isEmpty
-                  ? _noPostsWidget()
+                  ? _noPostWidget()
                   : ListView.builder(
                       itemCount: articleState.articles.length,
                       itemBuilder: (context, index) {
                         final article = articleState.articles[index];
-                        return BlocProvider(
-                          create: (context) => di.sl<ArticleCubit>(),
-                          child: SingleArticleWidget(articleEntity: article),
-                        );
+                        return SingleArticleWidget(articleEntity: article);
+                        // return BlocProvider(
+                        //   create: (context) => di.sl<ArticleCubit>(),
+                        //   child: SingleArticleWidget(articleEntity: article),
+                        // );
                       },
                     );
             }
@@ -82,15 +84,44 @@ class ArticlePage extends StatelessWidget {
     );
   }
 
-  Center _noPostsWidget() {
+  Widget _noPostWidget() {
     return Center(
-      child: Text(
-        "No Posts",
-        style: TextStyle(
-          color: AppColor.primaryColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 18,
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(30),
+            decoration: BoxDecoration(
+              color: Colors.yellow.shade200,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              FontAwesomeIcons.newspaper,
+              color: Colors.black,
+              size: 150,
+            ),
+          ),
+          AppSize.sizeVer(25),
+          const Text(
+            "No Article Yet!",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 23,
+              fontWeight: FontWeight.bold,
+              // color: ,
+            ),
+          ),
+          AppSize.sizeVer(15),
+          const Text(
+            "There is no article at this time, \nplease come back later.",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.black54,
+            ),
+          ),
+        ],
       ),
     );
   }

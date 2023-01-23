@@ -12,14 +12,9 @@ class UploadArticlePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ArticleCubit>.value(
-      value: di.sl<ArticleCubit>(),
+    return BlocProvider<ArticleCubit>(
+      create: (context) => di.sl<ArticleCubit>(),
       child: UploadArticleMainWidget(currentUser: currentUser),
     );
-
-    // return BlocProvider<ArticleCubit>(
-    //   create: (context) => di.sl<ArticleCubit>(),
-    //   child: UploadArticleMainWidget(currentUser: currentUser),
-    // );
   }
 }
