@@ -127,23 +127,26 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                           itemCount: commentArticle.length,
                           itemBuilder: (context, index) {
                             final singleComment = commentArticle[index];
-                            return SingleCommentWidget(
-                              comment: singleComment,
-                              currentUser: singleUser,
-                              onLikeClickListener: () =>
-                                  _likeComment(comment: singleComment),
-                              onMoreClickListener: () =>
-                                  _showModalBottomSheetMore(
-                                context: context,
+                            return BlocProvider<ReplyCubit>(
+                              create: (context) => di.sl<ReplyCubit>(),
+                              child: SingleCommentWidget(
                                 comment: singleComment,
+                                currentUser: singleUser,
+                                onLikeClickListener: () =>
+                                    _likeComment(comment: singleComment),
+                                onMoreClickListener: () =>
+                                    _showModalBottomSheetMore(
+                                  context: context,
+                                  comment: singleComment,
+                                ),
+                                onReplyClickListener: () {
+                                  setState(() {
+                                    _singleComment = singleComment;
+                                    _isReply = true;
+                                  });
+                                  _textFieldFocus.requestFocus();
+                                },
                               ),
-                              onReplyClickListener: () {
-                                setState(() {
-                                  _singleComment = singleComment;
-                                  _isReply = true;
-                                });
-                                _textFieldFocus.requestFocus();
-                              },
                             );
                           },
                         ),

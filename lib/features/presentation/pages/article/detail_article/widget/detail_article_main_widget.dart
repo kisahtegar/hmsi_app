@@ -196,15 +196,6 @@ class _DetailArticleMainWidgetState extends State<DetailArticleMainWidget> {
                           builder: (_) {
                             return MultiBlocProvider(
                               providers: [
-                                // BlocProvider<ReplyCubit>.value(
-                                //   value: di.sl<ReplyCubit>(),
-                                // ),
-                                // BlocProvider<CommentCubit>.value(
-                                //   value: di.sl<CommentCubit>(),
-                                // ),
-                                // BlocProvider<GetSingleUserCubit>.value(
-                                //   value: di.sl<GetSingleUserCubit>(),
-                                // ),
                                 BlocProvider<ReplyCubit>(
                                   create: (context) => di.sl<ReplyCubit>(),
                                 ),
@@ -256,15 +247,17 @@ class _DetailArticleMainWidgetState extends State<DetailArticleMainWidget> {
                               AppSize.sizeVer(10),
                               Row(
                                 children: [
-                                  SizedBox(
-                                    width: 30,
-                                    height: 30,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: profileWidget(),
-                                    ),
-                                  ),
-                                  AppSize.sizeHor(10),
+                                  // SizedBox(
+                                  //   width: 30,
+                                  //   height: 30,
+                                  //   child: ClipRRect(
+                                  //     borderRadius: BorderRadius.circular(15),
+                                  //     child: profileWidget(
+                                  //       imageUrl: widget.articleId
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  // AppSize.sizeHor(10),
                                   Expanded(
                                     child: Container(
                                       height: 40,
