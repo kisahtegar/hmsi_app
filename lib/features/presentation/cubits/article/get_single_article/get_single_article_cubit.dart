@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -12,6 +13,8 @@ part 'get_single_article_state.dart';
 class GetSingleArticleCubit extends Cubit<GetSingleArticleState> {
   final ReadSingleArticleUseCase readSingleArticleUseCase;
 
+  StreamSubscription<List<ArticleEntity>>? sub;
+
   GetSingleArticleCubit({required this.readSingleArticleUseCase})
       : super(GetSingleArticleInitial());
 
@@ -19,7 +22,16 @@ class GetSingleArticleCubit extends Cubit<GetSingleArticleState> {
     emit(GetSingleArticleLoading());
     try {
       final streamResponse = readSingleArticleUseCase.call(articleId);
-      streamResponse.listen((articles) async {
+      // streamResponse.listen((articles) async {
+      //   debugPrint(
+      //       "GetSingleArticleCubit[getSingleAricle]: emit(GetSingleArticleLoaded())");
+      //   await Future.delayed(const Duration(milliseconds: 1));
+      //   if (isClosed) return;
+      //   emit(GetSingleArticleLoaded(article: articles.first));
+      // });
+
+      await sub?.cancel();
+      sub = streamResponse.listen((articles) async {
         debugPrint(
             "GetSingleArticleCubit[getSingleAricle]: emit(GetSingleArticleLoaded())");
         await Future.delayed(const Duration(milliseconds: 1));
@@ -34,7 +46,8 @@ class GetSingleArticleCubit extends Cubit<GetSingleArticleState> {
   }
 
   @override
-  Future<void> close() {
+  Future<void> close() async {
+    await sub?.cancel();
     return super.close();
   }
 }

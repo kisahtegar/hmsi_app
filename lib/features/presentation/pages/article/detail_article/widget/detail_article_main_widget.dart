@@ -34,9 +34,11 @@ class _DetailArticleMainWidgetState extends State<DetailArticleMainWidget> {
     BlocProvider.of<GetSingleArticleCubit>(context)
         .getSingleAricle(articleId: widget.articleId);
     di.sl<GetCurrentUidUseCase>().call().then((value) {
-      setState(() {
-        _currentUid = value;
-      });
+      if (mounted) {
+        setState(() {
+          _currentUid = value;
+        });
+      }
     });
     super.initState();
   }
@@ -194,6 +196,15 @@ class _DetailArticleMainWidgetState extends State<DetailArticleMainWidget> {
                           builder: (_) {
                             return MultiBlocProvider(
                               providers: [
+                                // BlocProvider<ReplyCubit>.value(
+                                //   value: di.sl<ReplyCubit>(),
+                                // ),
+                                // BlocProvider<CommentCubit>.value(
+                                //   value: di.sl<CommentCubit>(),
+                                // ),
+                                // BlocProvider<GetSingleUserCubit>.value(
+                                //   value: di.sl<GetSingleUserCubit>(),
+                                // ),
                                 BlocProvider<ReplyCubit>(
                                   create: (context) => di.sl<ReplyCubit>(),
                                 ),

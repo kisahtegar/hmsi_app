@@ -41,9 +41,11 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
   @override
   void initState() {
     di.sl<GetCurrentUidUseCase>().call().then((value) {
-      setState(() {
+      if (mounted) {
+        setState(() {
         _currentUid = value;
       });
+      }
     });
     BlocProvider.of<ReplyCubit>(context).getReplys(
       replyEntity: ReplyEntity(
