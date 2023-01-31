@@ -18,6 +18,11 @@ import 'features/domain/usecases/comment/delete_comment_usecase.dart';
 import 'features/domain/usecases/comment/like_comment_usecase.dart';
 import 'features/domain/usecases/comment/read_comments_usecase.dart';
 import 'features/domain/usecases/comment/update_comment_usecase.dart';
+import 'features/domain/usecases/event/create_event_usecase.dart';
+import 'features/domain/usecases/event/delete_event_usecase.dart';
+import 'features/domain/usecases/event/read_events_usecase.dart';
+import 'features/domain/usecases/event/read_single_event_usecase.dart';
+import 'features/domain/usecases/event/update_event_usecase.dart';
 import 'features/domain/usecases/reply/create_reply_usecase.dart';
 import 'features/domain/usecases/reply/delete_reply_usecase.dart';
 import 'features/domain/usecases/reply/like_reply_usecase.dart';
@@ -39,6 +44,8 @@ import 'features/presentation/cubits/article/get_single_article/get_single_artic
 import 'features/presentation/cubits/auth/auth_cubit.dart';
 import 'features/presentation/cubits/comment/comment_cubit.dart';
 import 'features/presentation/cubits/credential/credential_cubit.dart';
+import 'features/presentation/cubits/event/event_cubit.dart';
+import 'features/presentation/cubits/event/get_single_event/get_single_event_cubit.dart';
 import 'features/presentation/cubits/reply/reply_cubit.dart';
 import 'features/presentation/cubits/user/get_single_other_user/get_single_other_user_cubit.dart';
 import 'features/presentation/cubits/user/get_single_user/get_single_user_cubit.dart';
@@ -121,6 +128,23 @@ Future<void> init() async {
     ),
   );
 
+  // EventCubit
+  sl.registerFactory(
+    () => EventCubit(
+      createEventUseCase: sl.call(),
+      readEventsUseCase: sl.call(),
+      updateEventUseCase: sl.call(),
+      deleteEventUseCase: sl.call(),
+    ),
+  );
+
+  // GetSingleEventCubit
+  sl.registerFactory(
+    () => GetSingleEventCubit(
+      readSingleEventUseCase: sl.call(),
+    ),
+  );
+
   // !-- Use Cases --!
 
   // user
@@ -163,18 +187,40 @@ Future<void> init() async {
       () => LikeArticleUseCase(firebaseRepository: sl.call()));
 
   // Comment
-  sl.registerFactory(() => CreateCommentUseCase(firebaseRepository: sl.call()));
-  sl.registerFactory(() => ReadCommentsUseCase(firebaseRepository: sl.call()));
-  sl.registerFactory(() => UpdateCommentUseCase(firebaseRepository: sl.call()));
-  sl.registerFactory(() => DeleteCommentUseCase(firebaseRepository: sl.call()));
-  sl.registerFactory(() => LikeCommentUseCase(firebaseRepository: sl.call()));
+  sl.registerLazySingleton(
+      () => CreateCommentUseCase(firebaseRepository: sl.call()));
+  sl.registerLazySingleton(
+      () => ReadCommentsUseCase(firebaseRepository: sl.call()));
+  sl.registerLazySingleton(
+      () => UpdateCommentUseCase(firebaseRepository: sl.call()));
+  sl.registerLazySingleton(
+      () => DeleteCommentUseCase(firebaseRepository: sl.call()));
+  sl.registerLazySingleton(
+      () => LikeCommentUseCase(firebaseRepository: sl.call()));
 
   // Reply
-  sl.registerFactory(() => CreateReplyUseCase(firebaseRepository: sl.call()));
-  sl.registerFactory(() => ReadReplysUseCase(firebaseRepository: sl.call()));
-  sl.registerFactory(() => UpdateReplyUseCase(firebaseRepository: sl.call()));
-  sl.registerFactory(() => DeleteReplyUseCase(firebaseRepository: sl.call()));
-  sl.registerFactory(() => LikeReplyUseCase(firebaseRepository: sl.call()));
+  sl.registerLazySingleton(
+      () => CreateReplyUseCase(firebaseRepository: sl.call()));
+  sl.registerLazySingleton(
+      () => ReadReplysUseCase(firebaseRepository: sl.call()));
+  sl.registerLazySingleton(
+      () => UpdateReplyUseCase(firebaseRepository: sl.call()));
+  sl.registerLazySingleton(
+      () => DeleteReplyUseCase(firebaseRepository: sl.call()));
+  sl.registerLazySingleton(
+      () => LikeReplyUseCase(firebaseRepository: sl.call()));
+
+  // Event
+  sl.registerLazySingleton(
+      () => CreateEventUseCase(firebaseRepository: sl.call()));
+  sl.registerLazySingleton(
+      () => ReadEventsUseCase(firebaseRepository: sl.call()));
+  sl.registerLazySingleton(
+      () => ReadSingleEventUseCase(firebaseRepository: sl.call()));
+  sl.registerLazySingleton(
+      () => UpdateEventUseCase(firebaseRepository: sl.call()));
+  sl.registerLazySingleton(
+      () => DeleteEventUseCase(firebaseRepository: sl.call()));
 
   // !-- Repository --!
   sl.registerLazySingleton<FirebaseRepository>(
