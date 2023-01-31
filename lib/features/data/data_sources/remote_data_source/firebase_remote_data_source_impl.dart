@@ -9,6 +9,7 @@ import 'package:uuid/uuid.dart';
 import '../../../../const.dart';
 import '../../../domain/entities/article/article_entity.dart';
 import '../../../domain/entities/comment/comment_entity.dart';
+import '../../../domain/entities/event/event_entity.dart';
 import '../../../domain/entities/reply/reply_entity.dart';
 import '../../../domain/entities/user/user_entity.dart';
 import '../../models/article/article_model.dart';
@@ -591,5 +592,35 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     }
 
     replyCollection.doc(replyEntity.replyId).update(replyInfo);
+  }
+
+  @override
+  Future<void> createEvent(EventEntity eventEntity) {
+    // TODO: implement createEvent
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteEvent(EventEntity eventEntity) {
+    // TODO: implement deleteEvent
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<List<EventEntity>> readEvents(EventEntity eventEntity) {
+    // TODO: implement readEvents
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<List<EventEntity>> readSingleEvent(String eventId) {
+    // TODO: implement readSingleEvent
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> updateEvent(EventEntity eventEntity) {
+    // TODO: implement updateEvent
+    throw UnimplementedError();
   }
 }

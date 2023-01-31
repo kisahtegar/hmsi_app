@@ -2,6 +2,7 @@ import 'dart:io';
 
 import '../entities/article/article_entity.dart';
 import '../entities/comment/comment_entity.dart';
+import '../entities/event/event_entity.dart';
 import '../entities/reply/reply_entity.dart';
 import '../entities/user/user_entity.dart';
 
@@ -45,4 +46,11 @@ abstract class FirebaseRepository {
   Future<void> updateReply(ReplyEntity replyEntity);
   Future<void> deleteReply(ReplyEntity replyEntity);
   Future<void> likeReply(ReplyEntity replyEntity);
+
+  // Event Features
+  Future<void> createEvent(EventEntity eventEntity);
+  Stream<List<EventEntity>> readEvents(EventEntity eventEntity);
+  Stream<List<EventEntity>> readSingleEvent(String eventId);
+  Future<void> updateEvent(EventEntity eventEntity);
+  Future<void> deleteEvent(EventEntity eventEntity);
 }

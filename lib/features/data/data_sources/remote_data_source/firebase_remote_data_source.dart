@@ -2,6 +2,7 @@ import 'dart:io';
 
 import '../../../domain/entities/article/article_entity.dart';
 import '../../../domain/entities/comment/comment_entity.dart';
+import '../../../domain/entities/event/event_entity.dart';
 import '../../../domain/entities/reply/reply_entity.dart';
 import '../../../domain/entities/user/user_entity.dart';
 
@@ -45,4 +46,11 @@ abstract class FirebaseRemoteDataSource {
   Future<void> updateReply(ReplyEntity replyEntity);
   Future<void> deleteReply(ReplyEntity replyEntity);
   Future<void> likeReply(ReplyEntity replyEntity);
+
+  // Event Features
+  Future<void> createEvent(EventEntity eventEntity);
+  Stream<List<EventEntity>> readEvents(EventEntity eventEntity);
+  Stream<List<EventEntity>> readSingleEvent(String eventId);
+  Future<void> updateEvent(EventEntity eventEntity);
+  Future<void> deleteEvent(EventEntity eventEntity);
 }
