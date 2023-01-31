@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hmsi_app/features/presentation/pages/home/event/create_event/create_event_page.dart';
+import 'package:hmsi_app/features/presentation/pages/home/event/event_page.dart';
 
 import 'const.dart';
 import 'features/domain/entities/article/article_entity.dart';
@@ -51,6 +53,12 @@ class OnGenerateRoute {
         } else {
           return routeBuilder(const NoPageFound());
         }
+
+      case PageConst.eventPage:
+        return routeBuilder(const EventPage());
+
+      case PageConst.createEventPage:
+        return routeBuilder(const CreateEventPage());
 
       default:
         const NoPageFound();

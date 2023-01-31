@@ -61,6 +61,8 @@ class PageConst {
   static const String uploadArticlePage = 'uploadArticlePage';
   static const String detailArticlePage = 'detailArticlePage';
   static const String editArticlePage = 'editArticlePage';
+  static const String eventPage = 'eventPage';
+  static const String createEventPage = 'createEventPage';
 }
 
 // Firebase Collection
