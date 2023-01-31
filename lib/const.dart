@@ -71,6 +71,7 @@ class FirebaseConst {
   static const String articles = 'articles';
   static const String comment = 'comment';
   static const String reply = 'reply';
+  static const String event = 'event';
 }
 
 void toast(String message) {
