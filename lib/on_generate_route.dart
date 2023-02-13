@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hmsi_app/features/presentation/pages/home/event/create_event/create_event_page.dart';
-import 'package:hmsi_app/features/presentation/pages/home/event/event_page.dart';
 
 import 'const.dart';
 import 'features/domain/entities/article/article_entity.dart';
@@ -11,6 +9,8 @@ import 'features/presentation/pages/article/upload_article/upload_article_page.d
 import 'features/presentation/pages/credential/sign_in_page.dart';
 import 'features/presentation/pages/credential/sign_up_page.dart';
 import 'features/presentation/pages/credential/welcome_page.dart';
+import 'features/presentation/pages/home/event/create_event/create_event_page.dart';
+import 'features/presentation/pages/home/event/event_page.dart';
 import 'features/presentation/pages/profile/edit_profile_page.dart';
 
 class OnGenerateRoute {
@@ -55,10 +55,18 @@ class OnGenerateRoute {
         }
 
       case PageConst.eventPage:
-        return routeBuilder(const EventPage());
+        if (args is UserEntity) {
+          return routeBuilder(EventPage(currentUser: args));
+        } else {
+          return routeBuilder(const NoPageFound());
+        }
 
       case PageConst.createEventPage:
-        return routeBuilder(const CreateEventPage());
+        if (args is UserEntity) {
+          return routeBuilder(CreateEventPage(currentUser: args));
+        } else {
+          return routeBuilder(const NoPageFound());
+        }
 
       default:
         const NoPageFound();

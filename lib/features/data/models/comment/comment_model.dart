@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../../../domain/entities/comment/comment_entity.dart';
 
 class CommentModel extends CommentEntity {

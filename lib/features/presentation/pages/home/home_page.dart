@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hmsi_app/features/presentation/widgets/profile_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../const.dart';
 import '../../../domain/entities/user/user_entity.dart';
-import '../../widgets/image_box_widget.dart';
+import '../../widgets/profile_widget.dart';
 import 'widget/icon_menu_widget.dart';
 
 class HomePage extends StatelessWidget {
@@ -69,7 +68,11 @@ class HomePage extends StatelessWidget {
                     imageSize: 48,
                     description: "Event",
                     onTapListener: () {
-                      Navigator.pushNamed(context, PageConst.eventPage);
+                      Navigator.pushNamed(
+                        context,
+                        PageConst.eventPage,
+                        arguments: currentUser,
+                      );
                     },
                   ),
                   IconMenuWidget(

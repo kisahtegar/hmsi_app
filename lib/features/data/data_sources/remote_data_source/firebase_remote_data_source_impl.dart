@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:hmsi_app/features/data/models/event/event_model.dart';
+import '../../models/event/event_model.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../const.dart';
@@ -649,6 +649,30 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
     return eventCollection.snapshots().map((querySnapshot) =>
         querySnapshot.docs.map((e) => EventModel.fromSnapshot(e)).toList());
+  }
+
+  @override
+  Future<void> interestedEvent(EventEntity eventEntity) async {
+    final eventCollection = firebaseFirestore.collection(FirebaseConst.event);
+    final currentUid = await getCurrentUid();
+    final eventRef = await eventCollection.doc(eventEntity.eventId).get();
+
+    if (eventRef.exists) {
+      List interested = eventRef.get("interested");
+      final totalInterested = eventRef.get("totalInterested");
+
+      if (interested.contains(currentUid)) {
+        eventCollection.doc(eventEntity.eventId).update({
+          "interested": FieldValue.arrayRemove([currentUid]),
+          "totalInterested": totalInterested - 1,
+        });
+      } else {
+        eventCollection.doc(eventEntity.eventId).update({
+          "interested": FieldValue.arrayUnion([currentUid]),
+          "totalInterested": totalInterested + 1,
+        });
+      }
+    }
   }
 
   @override

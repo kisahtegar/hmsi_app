@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // AppColor
 class AppColor {
@@ -83,5 +84,22 @@ void toast(String message) {
     backgroundColor: AppColor.blueColor,
     textColor: Colors.white,
     fontSize: 16.0,
+  );
+}
+
+/// Open and Launching URL.
+Future<void> openUrl(String url) async {
+  final Uri urll = Uri.parse(url);
+  if (!await launchUrl(urll, mode: LaunchMode.externalApplication)) {
+    throw 'Could not launch $url';
+  }
+}
+
+/// This widget used for loading indicator
+loadingIndicator() {
+  return const Center(
+    child: CircularProgressIndicator(
+      color: Colors.black,
+    ),
   );
 }

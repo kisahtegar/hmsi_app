@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import '../../../domain/entities/event/event_entity.dart';
 import '../../../domain/usecases/event/create_event_usecase.dart';
 import '../../../domain/usecases/event/delete_event_usecase.dart';
+import '../../../domain/usecases/event/interested_event_usecase.dart';
 import '../../../domain/usecases/event/read_events_usecase.dart';
 import '../../../domain/usecases/event/update_event_usecase.dart';
 
@@ -18,6 +19,7 @@ class EventCubit extends Cubit<EventState> {
   final ReadEventsUseCase readEventsUseCase;
   final UpdateEventUseCase updateEventUseCase;
   final DeleteEventUseCase deleteEventUseCase;
+  final InterestedEventUseCase interestedEventUseCase;
 
   StreamSubscription<List<EventEntity>>? sub;
 
@@ -26,6 +28,7 @@ class EventCubit extends Cubit<EventState> {
     required this.readEventsUseCase,
     required this.updateEventUseCase,
     required this.deleteEventUseCase,
+    required this.interestedEventUseCase,
   }) : super(EventInitial());
 
   Future<void> createEvent({required EventEntity eventEntity}) async {
@@ -69,6 +72,16 @@ class EventCubit extends Cubit<EventState> {
   Future<void> deleteEvent({required EventEntity eventEntity}) async {
     try {
       await deleteEventUseCase.call(eventEntity);
+    } on SocketException catch (_) {
+      emit(EventFailure());
+    } catch (_) {
+      emit(EventFailure());
+    }
+  }
+
+  Future<void> interestedEvent({required EventEntity eventEntity}) async {
+    try {
+      await interestedEventUseCase.call(eventEntity);
     } on SocketException catch (_) {
       emit(EventFailure());
     } catch (_) {

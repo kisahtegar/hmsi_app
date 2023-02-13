@@ -1,9 +1,8 @@
 import 'dart:io';
 
-import 'package:hmsi_app/features/domain/entities/event/event_entity.dart';
-
 import '../../domain/entities/article/article_entity.dart';
 import '../../domain/entities/comment/comment_entity.dart';
+import '../../domain/entities/event/event_entity.dart';
 import '../../domain/entities/reply/reply_entity.dart';
 import '../../domain/entities/user/user_entity.dart';
 import '../../domain/repositories/firebase_repository.dart';
@@ -140,4 +139,8 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   @override
   Future<void> updateEvent(EventEntity eventEntity) async =>
       firebaseRemoteDataSource.updateEvent(eventEntity);
+
+  @override
+  Future<void> interestedEvent(EventEntity eventEntity) async =>
+      firebaseRemoteDataSource.interestedEvent(eventEntity);
 }

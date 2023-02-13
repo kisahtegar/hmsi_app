@@ -20,6 +20,7 @@ import 'features/domain/usecases/comment/read_comments_usecase.dart';
 import 'features/domain/usecases/comment/update_comment_usecase.dart';
 import 'features/domain/usecases/event/create_event_usecase.dart';
 import 'features/domain/usecases/event/delete_event_usecase.dart';
+import 'features/domain/usecases/event/interested_event_usecase.dart';
 import 'features/domain/usecases/event/read_events_usecase.dart';
 import 'features/domain/usecases/event/read_single_event_usecase.dart';
 import 'features/domain/usecases/event/update_event_usecase.dart';
@@ -135,6 +136,7 @@ Future<void> init() async {
       readEventsUseCase: sl.call(),
       updateEventUseCase: sl.call(),
       deleteEventUseCase: sl.call(),
+      interestedEventUseCase: sl.call(),
     ),
   );
 
@@ -221,6 +223,8 @@ Future<void> init() async {
       () => UpdateEventUseCase(firebaseRepository: sl.call()));
   sl.registerLazySingleton(
       () => DeleteEventUseCase(firebaseRepository: sl.call()));
+  sl.registerLazySingleton(
+      () => InterestedEventUseCase(firebaseRepository: sl.call()));
 
   // !-- Repository --!
   sl.registerLazySingleton<FirebaseRepository>(

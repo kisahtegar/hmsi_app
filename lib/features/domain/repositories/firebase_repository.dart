@@ -53,4 +53,5 @@ abstract class FirebaseRepository {
   Stream<List<EventEntity>> readSingleEvent(String eventId);
   Future<void> updateEvent(EventEntity eventEntity);
   Future<void> deleteEvent(EventEntity eventEntity);
+  Future<void> interestedEvent(EventEntity eventEntity);
 }
