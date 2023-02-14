@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hmsi_app/features/domain/entities/reply/reply_entity.dart';
-import 'package:hmsi_app/features/presentation/cubits/reply/reply_cubit.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../../../const.dart';
+import '../../../../../../../injection_container.dart' as di;
 import '../../../../../../domain/entities/comment/comment_entity.dart';
+import '../../../../../../domain/entities/reply/reply_entity.dart';
 import '../../../../../../domain/entities/user/user_entity.dart';
 import '../../../../../../domain/usecases/user/get_current_uid_usecase.dart';
+import '../../../../../cubits/reply/reply_cubit.dart';
 import '../../../../../widgets/more_menu_button_widget.dart';
 import '../../../../../widgets/profile_widget.dart';
-import 'package:hmsi_app/injection_container.dart' as di;
-
 import 'single_reply_widget.dart';
 
 class SingleCommentWidget extends StatefulWidget {
@@ -43,8 +42,8 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
     di.sl<GetCurrentUidUseCase>().call().then((value) {
       if (mounted) {
         setState(() {
-        _currentUid = value;
-      });
+          _currentUid = value;
+        });
       }
     });
     BlocProvider.of<ReplyCubit>(context).getReplys(

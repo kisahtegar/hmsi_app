@@ -3,6 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../const.dart';
 import '../../../domain/entities/user/user_entity.dart';
+import '../../widgets/profile_widget.dart';
 import 'widget/icon_menu_widget.dart';
 
 class HomePage extends StatelessWidget {
@@ -11,15 +12,28 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     debugPrint("HomePage[build]: Building!!");
     return Scaffold(
       backgroundColor: AppColor.backGroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
+        titleSpacing: 1,
+        leading: Padding(
+          padding: EdgeInsets.all(size.width * 0.03),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(40),
+            child: profileWidget(imageUrl: currentUser.profileUrl),
+          ),
+        ),
         title: Text(
-          "Home",
-          style: TextStyle(color: AppColor.primaryColor, fontSize: 25),
+          "Hi, ${currentUser.name == "" ? currentUser.username : currentUser.name}",
+          style: TextStyle(
+            color: AppColor.primaryColor,
+            fontSize: size.width * 0.05,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: Padding(
@@ -53,7 +67,13 @@ class HomePage extends StatelessWidget {
                     image: "assets/images/absensi.png",
                     imageSize: 48,
                     description: "Event",
-                    onTapListener: () {},
+                    onTapListener: () {
+                      Navigator.pushNamed(
+                        context,
+                        PageConst.eventPage,
+                        arguments: currentUser,
+                      );
+                    },
                   ),
                   IconMenuWidget(
                     backgroundColor: Colors.blue.withOpacity(0.5),

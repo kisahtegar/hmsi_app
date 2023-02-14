@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // AppColor
 class AppColor {
@@ -61,6 +62,8 @@ class PageConst {
   static const String uploadArticlePage = 'uploadArticlePage';
   static const String detailArticlePage = 'detailArticlePage';
   static const String editArticlePage = 'editArticlePage';
+  static const String eventPage = 'eventPage';
+  static const String createEventPage = 'createEventPage';
 }
 
 // Firebase Collection
@@ -69,6 +72,7 @@ class FirebaseConst {
   static const String articles = 'articles';
   static const String comment = 'comment';
   static const String reply = 'reply';
+  static const String event = 'event';
 }
 
 void toast(String message) {
@@ -80,5 +84,22 @@ void toast(String message) {
     backgroundColor: AppColor.blueColor,
     textColor: Colors.white,
     fontSize: 16.0,
+  );
+}
+
+/// Open and Launching URL.
+Future<void> openUrl(String url) async {
+  final Uri urll = Uri.parse(url);
+  if (!await launchUrl(urll, mode: LaunchMode.externalApplication)) {
+    throw 'Could not launch $url';
+  }
+}
+
+/// This widget used for loading indicator
+loadingIndicator() {
+  return const Center(
+    child: CircularProgressIndicator(
+      color: Colors.black,
+    ),
   );
 }

@@ -4,11 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import '../../models/event/event_model.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../const.dart';
 import '../../../domain/entities/article/article_entity.dart';
 import '../../../domain/entities/comment/comment_entity.dart';
+import '../../../domain/entities/event/event_entity.dart';
 import '../../../domain/entities/reply/reply_entity.dart';
 import '../../../domain/entities/user/user_entity.dart';
 import '../../models/article/article_model.dart';
@@ -591,5 +593,125 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     }
 
     replyCollection.doc(replyEntity.replyId).update(replyInfo);
+  }
+
+  @override
+  Future<void> createEvent(EventEntity eventEntity) async {
+    final eventCollection = firebaseFirestore.collection(FirebaseConst.event);
+
+    final newEvent = EventModel(
+      eventId: eventEntity.eventId,
+      creatorUid: eventEntity.creatorUid,
+      username: eventEntity.username,
+      name: eventEntity.name,
+      userProfileUrl: eventEntity.userProfileUrl,
+      type: eventEntity.type,
+      title: eventEntity.title,
+      description: eventEntity.description,
+      location: eventEntity.location,
+      link: eventEntity.link,
+      interested: const [],
+      totalInterested: 0,
+      date: eventEntity.date,
+      time: eventEntity.time,
+      createAt: eventEntity.createAt,
+    ).toJson();
+
+    try {
+      final eventDocRef = await eventCollection.doc(eventEntity.eventId).get();
+
+      if (!eventDocRef.exists) {
+        eventCollection.doc(eventEntity.eventId).set(newEvent);
+      } else {
+        eventCollection.doc(eventEntity.eventId).update(newEvent);
+      }
+    } catch (e) {
+      toast("Some error occured");
+    }
+  }
+
+  @override
+  Future<void> deleteEvent(EventEntity eventEntity) async {
+    final eventCollection = firebaseFirestore.collection(FirebaseConst.event);
+
+    try {
+      eventCollection.doc(eventEntity.eventId).delete();
+    } catch (e) {
+      toast("Some error occured");
+    }
+  }
+
+  @override
+  Stream<List<EventEntity>> readEvents(EventEntity eventEntity) {
+    final eventCollection = firebaseFirestore
+        .collection(FirebaseConst.event)
+        .orderBy("createAt", descending: true);
+
+    return eventCollection.snapshots().map((querySnapshot) =>
+        querySnapshot.docs.map((e) => EventModel.fromSnapshot(e)).toList());
+  }
+
+  @override
+  Future<void> interestedEvent(EventEntity eventEntity) async {
+    final eventCollection = firebaseFirestore.collection(FirebaseConst.event);
+    final currentUid = await getCurrentUid();
+    final eventRef = await eventCollection.doc(eventEntity.eventId).get();
+
+    if (eventRef.exists) {
+      List interested = eventRef.get("interested");
+      final totalInterested = eventRef.get("totalInterested");
+
+      if (interested.contains(currentUid)) {
+        eventCollection.doc(eventEntity.eventId).update({
+          "interested": FieldValue.arrayRemove([currentUid]),
+          "totalInterested": totalInterested - 1,
+        });
+      } else {
+        eventCollection.doc(eventEntity.eventId).update({
+          "interested": FieldValue.arrayUnion([currentUid]),
+          "totalInterested": totalInterested + 1,
+        });
+      }
+    }
+  }
+
+  @override
+  Stream<List<EventEntity>> readSingleEvent(String eventId) {
+    final eventCollection = firebaseFirestore
+        .collection(FirebaseConst.event)
+        .orderBy("createAt", descending: true)
+        .where("eventId", isEqualTo: eventId);
+
+    return eventCollection.snapshots().map((querySnapshot) =>
+        querySnapshot.docs.map((e) => EventModel.fromSnapshot(e)).toList());
+  }
+
+  @override
+  Future<void> updateEvent(EventEntity eventEntity) async {
+    final eventCollection = firebaseFirestore.collection(FirebaseConst.event);
+
+    Map<String, dynamic> eventInfo = {};
+
+    if (eventEntity.type != "" && eventEntity.type != null) {
+      eventInfo['type'] = eventEntity.type;
+    }
+    // TODO: Need to implement Timestamp!!
+    // if (eventEntity.date != "" && eventEntity.date != null) {
+    //   eventInfo['date'] = eventEntity.date;
+    // }
+    if (eventEntity.title != "" && eventEntity.title != null) {
+      eventInfo['title'] = eventEntity.title;
+    }
+    if (eventEntity.description != "" && eventEntity.description != null) {
+      eventInfo['description'] = eventEntity.description;
+    }
+    if (eventEntity.location != "" && eventEntity.location != null) {
+      eventInfo['location'] = eventEntity.location;
+    }
+    if (eventEntity.link != "" && eventEntity.link != null) {
+      eventInfo['link'] = eventEntity.link;
+    }
+
+    eventCollection.doc(eventEntity.eventId).update(eventInfo);
   }
 }

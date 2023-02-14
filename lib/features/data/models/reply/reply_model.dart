@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../../../domain/entities/reply/reply_entity.dart';
 
 class ReplyModel extends ReplyEntity {

@@ -1,20 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hmsi_app/features/domain/entities/app_entity.dart';
-import 'package:hmsi_app/features/domain/entities/reply/reply_entity.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../../../../const.dart';
+import '../../../../../../../injection_container.dart' as di;
+import '../../../../../../domain/entities/app_entity.dart';
 import '../../../../../../domain/entities/comment/comment_entity.dart';
+import '../../../../../../domain/entities/reply/reply_entity.dart';
 import '../../../../../../domain/entities/user/user_entity.dart';
 import '../../../../../cubits/comment/comment_cubit.dart';
 import '../../../../../cubits/reply/reply_cubit.dart';
 import '../../../../../cubits/user/get_single_user/get_single_user_cubit.dart';
 import '../../../../../widgets/more_menu_button_widget.dart';
 import '../../../../../widgets/profile_widget.dart';
-import 'package:hmsi_app/injection_container.dart' as di;
-
 import 'single_comment_widget.dart';
 
 class CommentBottomSheet extends StatefulWidget {
@@ -73,7 +72,6 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                 final commentArticle = commentState.comments;
                 return Padding(
                   padding: EdgeInsets.only(
-                    top: MediaQuery.of(widget.context).padding.top,
                     bottom: MediaQuery.of(context).viewInsets.bottom,
                   ),
                   child: Column(

@@ -14,7 +14,6 @@ import '../../../../cubits/reply/reply_cubit.dart';
 import '../../../../cubits/user/get_single_user/get_single_user_cubit.dart';
 import '../../../../widgets/image_box_widget.dart';
 import '../../../../widgets/more_menu_button_widget.dart';
-import '../../../../widgets/profile_widget.dart';
 import '../comment/widget/comment_bottom_sheet_widget.dart';
 
 class DetailArticleMainWidget extends StatefulWidget {
@@ -189,7 +188,7 @@ class _DetailArticleMainWidgetState extends State<DetailArticleMainWidget> {
                         showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
-                          //NOTE: Waiting useSafeArea feature in flutter 3.4
+                          useSafeArea: true,
                           shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.vertical(
                                   top: Radius.circular(20))),
