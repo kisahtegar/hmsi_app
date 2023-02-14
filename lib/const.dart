@@ -64,6 +64,7 @@ class PageConst {
   static const String editArticlePage = 'editArticlePage';
   static const String eventPage = 'eventPage';
   static const String createEventPage = 'createEventPage';
+  static const String editEventPage = 'editEventPage';
 }
 
 // Firebase Collection

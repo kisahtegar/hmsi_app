@@ -2,44 +2,52 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../../../../../../const.dart';
 import '../../../../../../domain/entities/event/event_entity.dart';
-import '../../../../../../domain/entities/user/user_entity.dart';
 import '../../../../../cubits/event/event_cubit.dart';
 import '../../../../profile/widget/form_edit_widget.dart';
 
-class CreateEventMainWidget extends StatefulWidget {
-  final UserEntity currentUser;
-  const CreateEventMainWidget({super.key, required this.currentUser});
+class EditEventMainWidget extends StatefulWidget {
+  final EventEntity event;
+  const EditEventMainWidget({super.key, required this.event});
 
   @override
-  State<CreateEventMainWidget> createState() => _CreateEventMainWidgetState();
+  State<EditEventMainWidget> createState() => _EditEventMainWidgetState();
 }
 
-class _CreateEventMainWidgetState extends State<CreateEventMainWidget> {
+class _EditEventMainWidgetState extends State<EditEventMainWidget> {
   final _formKey = GlobalKey<FormState>();
   final _typeEvent = ['Gather', 'Meeting', 'On-Meeting', 'Training'];
-  String? _typeSelected = 'Gather';
+  String? _typeSelected;
   DateTime? _dateTimeSelected = DateTime.now();
   TimeOfDay? _timeSelected = TimeOfDay.now();
   DateTime? _timeSelectedToDateTime;
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+  TextEditingController? _titleController;
+  TextEditingController? _descriptionController;
+  TextEditingController? _locationController;
+  TextEditingController? _linkController;
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
-  final TextEditingController _locationController = TextEditingController();
-  final TextEditingController _linkController = TextEditingController();
-  bool _isUploading = false;
+  bool _isUpdating = false;
 
   @override
   void initState() {
+    _titleController = TextEditingController(text: widget.event.title);
+    _descriptionController =
+        TextEditingController(text: widget.event.description);
+    _locationController = TextEditingController(text: widget.event.location);
+    _linkController = TextEditingController(text: widget.event.link);
+    _typeSelected = widget.event.type;
+    _dateTimeSelected = DateTime.fromMicrosecondsSinceEpoch(
+        widget.event.date!.microsecondsSinceEpoch);
+    _timeSelected = TimeOfDay.fromDateTime(DateTime.fromMicrosecondsSinceEpoch(
+        widget.event.time!.microsecondsSinceEpoch));
+
     _dateController.text =
         "${_dateTimeSelected!.year}-${_dateTimeSelected!.month.toString().padLeft(2, '0')}-${_dateTimeSelected!.day.toString().padLeft(2, '0')}";
     _timeController.text =
         "${_timeSelected!.hour.toString().padLeft(2, '0')}:${_timeSelected!.minute.toString().padLeft(2, '0')}";
-
     _timeSelectedToDateTime = DateTime(
       _dateTimeSelected!.year,
       _dateTimeSelected!.month,
@@ -47,32 +55,19 @@ class _CreateEventMainWidgetState extends State<CreateEventMainWidget> {
       _timeSelected!.hour,
       _timeSelected!.minute,
     );
+    debugPrint(_dateTimeSelected.toString());
+    debugPrint(_timeSelectedToDateTime.toString());
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _descriptionController.dispose();
-    _dateController.dispose();
-    _locationController.dispose();
-    _linkController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        titleSpacing: 2,
+        backgroundColor: AppColor.backGroundColor,
         title: Text(
-          "Create Event",
-          style: TextStyle(
-            color: AppColor.primaryColor,
-            fontWeight: FontWeight.w600,
-          ),
+          "Edit Event",
+          style: TextStyle(color: AppColor.primaryColor),
         ),
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
@@ -81,12 +76,12 @@ class _CreateEventMainWidgetState extends State<CreateEventMainWidget> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10.0),
-            child: _isUploading == false
+            child: _isUpdating == false
                 ? GestureDetector(
                     onTap: () {
                       // Validate returns true if the form is valid, or false otherwise.
                       if (_formKey.currentState!.validate()) {
-                        _submitEvent();
+                        _updateEvent();
                       }
                     },
                     child: Icon(Icons.done,
@@ -298,53 +293,48 @@ class _CreateEventMainWidgetState extends State<CreateEventMainWidget> {
     );
   }
 
-  /// DropdownMenuItem for Type Event
+  /// DropdownMenuItem for Type Event.
   DropdownMenuItem<String> _buildMenuType(String type) => DropdownMenuItem(
         value: type,
         child: Text(type),
       );
 
-  /// Convert DateTime to Timestamp for Firebase.
+  /// Converting DateTime to Timestamp for Firebase.
   Timestamp _dateTimeToTimestamp(DateTime dateTime) {
     return Timestamp.fromMicrosecondsSinceEpoch(
       dateTime.microsecondsSinceEpoch,
     );
   }
 
-  // Submit Event
-  void _submitEvent() {
+  /// This method will updating event.
+  void _updateEvent() {
+    setState(() => _isUpdating = true);
     FocusScope.of(context).unfocus();
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Please wait...')),
     );
     BlocProvider.of<EventCubit>(context)
-        .createEvent(
+        .updateEvent(
       eventEntity: EventEntity(
-        eventId: const Uuid().v1(),
-        creatorUid: widget.currentUser.uid,
-        username: widget.currentUser.username,
-        name: widget.currentUser.name,
-        userProfileUrl: widget.currentUser.profileUrl,
-        type: _typeSelected,
-        title: _titleController.text,
-        description: _descriptionController.text,
-        location: _locationController.text,
-        link: _linkController.text,
-        interested: const [],
-        totalInterested: 0,
+        eventId: widget.event.eventId,
+        title: _titleController!.text,
+        description: _descriptionController!.text,
         date: _dateTimeToTimestamp(_dateTimeSelected!),
         time: _dateTimeToTimestamp(_timeSelectedToDateTime!),
-        createAt: Timestamp.now(),
+        type: _typeSelected,
+        location: _locationController!.text,
+        link: _linkController!.text,
       ),
     )
         .then((_) {
       setState(() {
-        _isUploading = false;
-        _titleController.clear();
-        _descriptionController.clear();
-        _locationController.clear();
-        _linkController.clear();
+        _isUpdating = false;
+        _titleController!.clear();
+        _descriptionController!.clear();
         _dateController.clear();
+        _timeController.clear();
+        _locationController!.clear();
+        _linkController!.clear();
       });
       Navigator.pop(context);
     });

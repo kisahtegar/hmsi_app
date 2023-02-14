@@ -692,18 +692,20 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
     Map<String, dynamic> eventInfo = {};
 
-    if (eventEntity.type != "" && eventEntity.type != null) {
-      eventInfo['type'] = eventEntity.type;
-    }
-    // TODO: Need to implement Timestamp!!
-    // if (eventEntity.date != "" && eventEntity.date != null) {
-    //   eventInfo['date'] = eventEntity.date;
-    // }
     if (eventEntity.title != "" && eventEntity.title != null) {
       eventInfo['title'] = eventEntity.title;
     }
     if (eventEntity.description != "" && eventEntity.description != null) {
       eventInfo['description'] = eventEntity.description;
+    }
+    if (eventEntity.date != null) {
+      eventInfo['date'] = eventEntity.date;
+    }
+    if (eventEntity.time != null) {
+      eventInfo['time'] = eventEntity.time;
+    }
+    if (eventEntity.type != "" && eventEntity.type != null) {
+      eventInfo['type'] = eventEntity.type;
     }
     if (eventEntity.location != "" && eventEntity.location != null) {
       eventInfo['location'] = eventEntity.location;
