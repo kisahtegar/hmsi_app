@@ -391,11 +391,24 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
             .collection(FirebaseConst.articles)
             .doc(commentEntity.articleId);
 
+        // This will decrement totalComments in article doc.
         articleCollection.get().then((value) {
           if (value.exists) {
             final totalComments = value.get('totalComments');
             articleCollection.update({"totalComments": totalComments - 1});
             return;
+          }
+        });
+
+        // This logic will deleting Collection document reply because if you
+        // delete comment, cannot automatically delete subCollection.
+        commentCollection
+            .doc(commentEntity.commentId)
+            .collection(FirebaseConst.reply)
+            .get()
+            .then((value) {
+          for (var doc in value.docs) {
+            doc.reference.delete();
           }
         });
       });

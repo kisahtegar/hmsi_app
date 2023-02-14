@@ -140,11 +140,7 @@ class _EditArticleMainWidgetState extends State<EditArticleMainWidget> {
                 AppSize.sizeVer(10),
                 FormEditWidget(
                   controller: _descriptionController,
-                  autofocus: true,
-                  focusNode: _focusNode,
                   title: "Description",
-                  keyboardType: TextInputType.multiline,
-                  textInputAction: TextInputAction.newline,
                   maxLines: null,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -161,6 +157,7 @@ class _EditArticleMainWidgetState extends State<EditArticleMainWidget> {
     );
   }
 
+  // Select Image method
   Future<void> selectImage() async {
     try {
       final pickedFile =
@@ -179,6 +176,7 @@ class _EditArticleMainWidgetState extends State<EditArticleMainWidget> {
     }
   }
 
+  // Updating article method
   void _updateArticle() {
     setState(() => _isUpdating = true);
 
@@ -194,6 +192,7 @@ class _EditArticleMainWidgetState extends State<EditArticleMainWidget> {
     }
   }
 
+  // This will create update article.
   void _createUpdateArticle(String articleImageUrl) {
     BlocProvider.of<ArticleCubit>(context)
         .updateArticle(
@@ -213,49 +212,5 @@ class _EditArticleMainWidgetState extends State<EditArticleMainWidget> {
       });
       Navigator.pop(context);
     });
-  }
-
-  // This 4 Method using for texfield multiline
-  void handleKeyPress(event) {
-    if (event is RawKeyUpEvent && event.data is RawKeyEventDataWeb) {
-      var data = event.data as RawKeyEventDataWeb;
-      if (data.code == "Enter" && !event.isShiftPressed) {
-        final val = _descriptionController!.value;
-        final messageWithoutNewLine =
-            _descriptionController!.text.substring(0, val.selection.start - 1) +
-                _descriptionController!.text.substring(val.selection.start);
-        _descriptionController!.value = TextEditingValue(
-          text: messageWithoutNewLine,
-          selection: TextSelection.fromPosition(
-            TextPosition(offset: messageWithoutNewLine.length),
-          ),
-        );
-        // _onSend();
-      }
-    }
-  }
-
-  late final _focusNode = FocusNode(
-    onKey: _handleKeyPress,
-  );
-  KeyEventResult _handleKeyPress(FocusNode focusNode, RawKeyEvent event) {
-    // handles submit on enter
-    if (event.isKeyPressed(LogicalKeyboardKey.enter) && !event.isShiftPressed) {
-      _sendMessage();
-      // handled means that the event will not propagate
-      return KeyEventResult.handled;
-    }
-    // ignore every other keyboard event including SHIFT+ENTER
-    return KeyEventResult.ignored;
-  }
-
-  void _sendMessage() {
-    if (_descriptionController!.text.trim().isNotEmpty) {
-      // bring focus back to the input field
-      Future.delayed(Duration.zero, () {
-        _focusNode.requestFocus();
-        _descriptionController!.clear();
-      });
-    }
   }
 }

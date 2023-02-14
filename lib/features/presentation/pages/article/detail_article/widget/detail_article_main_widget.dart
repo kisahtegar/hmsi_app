@@ -53,11 +53,12 @@ class _DetailArticleMainWidgetState extends State<DetailArticleMainWidget> {
           final singleArticle = singleArticleState.article;
           return _bodyWidget(mainContext, singleArticle, size);
         }
-        return const Center(child: CircularProgressIndicator());
+        return loadingIndicator();
       },
     );
   }
 
+  // This widget is body page.
   Widget _bodyWidget(
       BuildContext mainContext, ArticleEntity singleArticle, Size size) {
     return Scaffold(
@@ -163,7 +164,6 @@ class _DetailArticleMainWidgetState extends State<DetailArticleMainWidget> {
                   fontFamily: 'Roboto',
                   fontSize: 19,
                   fontWeight: FontWeight.w400,
-                  // fontStyle: FontStyle.italic,
                 ),
               ),
 
@@ -246,17 +246,6 @@ class _DetailArticleMainWidgetState extends State<DetailArticleMainWidget> {
                               AppSize.sizeVer(10),
                               Row(
                                 children: [
-                                  // SizedBox(
-                                  //   width: 30,
-                                  //   height: 30,
-                                  //   child: ClipRRect(
-                                  //     borderRadius: BorderRadius.circular(15),
-                                  //     child: profileWidget(
-                                  //       imageUrl: widget.articleId
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  // AppSize.sizeHor(10),
                                   Expanded(
                                     child: Container(
                                       height: 40,
@@ -299,6 +288,7 @@ class _DetailArticleMainWidgetState extends State<DetailArticleMainWidget> {
     );
   }
 
+  // Showing Bottom sheet for option more article
   void _showModalBottomSheetOptions(
       BuildContext context, ArticleEntity article) {
     showModalBottomSheet(
@@ -351,6 +341,7 @@ class _DetailArticleMainWidgetState extends State<DetailArticleMainWidget> {
     );
   }
 
+  // This method will delete article
   _deleteArticle({required ArticleEntity articleEntity}) {
     Navigator.pop(context);
     BlocProvider.of<ArticleCubit>(context)

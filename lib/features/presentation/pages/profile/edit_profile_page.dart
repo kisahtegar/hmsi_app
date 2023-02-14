@@ -35,8 +35,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("EditProfilePage[build]: Building!!");
-    debugPrint("EditProfilePage[build]: currentUser(${widget.currentUser})");
     return Scaffold(
       backgroundColor: AppColor.backGroundColor,
       appBar: AppBar(
