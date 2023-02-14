@@ -5,8 +5,8 @@ import 'package:url_launcher/url_launcher.dart';
 // AppColor
 class AppColor {
   static Color backGroundColor = Colors.white;
-  static Color gradientFirst = const Color.fromARGB(255, 11, 17, 136);
-  static Color gradientSecond = const Color(0xFF6985e8);
+  static Color gradientFirst = const Color.fromARGB(255, 46, 109, 185);
+  static Color gradientSecond = const Color.fromARGB(255, 20, 36, 114);
   static Color blueColor = const Color.fromRGBO(0, 149, 246, 1);
   static Color primaryColor = Colors.black;
   static Color secondaryColor = Colors.grey;
@@ -65,6 +65,7 @@ class PageConst {
   static const String eventPage = 'eventPage';
   static const String createEventPage = 'createEventPage';
   static const String editEventPage = 'editEventPage';
+  static const String aboutPage = 'aboutPage';
 }
 
 // Firebase Collection

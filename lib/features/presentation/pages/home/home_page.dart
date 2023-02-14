@@ -94,7 +94,12 @@ class _HomePageState extends State<HomePage> {
                     image: "assets/images/about.png",
                     imageSize: 50,
                     description: "About",
-                    onTapListener: () {},
+                    onTapListener: () {
+                      Navigator.pushNamed(
+                        context,
+                        PageConst.aboutPage,
+                      );
+                    },
                   ),
                   // Container(width: 80) // FakeContainer
                 ],

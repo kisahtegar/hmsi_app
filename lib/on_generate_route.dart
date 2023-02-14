@@ -10,6 +10,7 @@ import 'features/presentation/pages/article/upload_article/upload_article_page.d
 import 'features/presentation/pages/credential/sign_in_page.dart';
 import 'features/presentation/pages/credential/sign_up_page.dart';
 import 'features/presentation/pages/credential/welcome_page.dart';
+import 'features/presentation/pages/home/about/about_page.dart';
 import 'features/presentation/pages/home/event/create_event/create_event_page.dart';
 import 'features/presentation/pages/home/event/edit_event/edit_event_page.dart';
 import 'features/presentation/pages/home/event/event_page.dart';
@@ -76,6 +77,8 @@ class OnGenerateRoute {
         } else {
           return routeBuilder(const NoPageFound());
         }
+      case PageConst.aboutPage:
+        return routeBuilder(const AboutPage());
 
       default:
         const NoPageFound();
