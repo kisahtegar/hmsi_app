@@ -159,10 +159,11 @@ class _DetailArticleMainWidgetState extends State<DetailArticleMainWidget> {
               AppSize.sizeVer(10),
               Text(
                 "${singleArticle.description}",
+                textAlign: TextAlign.justify,
                 style: const TextStyle(
                   color: Colors.black,
                   fontFamily: 'Roboto',
-                  fontSize: 19,
+                  fontSize: 18,
                   fontWeight: FontWeight.w400,
                 ),
               ),
