@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../const.dart';
 import '../../../domain/entities/user/user_entity.dart';
@@ -15,7 +14,6 @@ class HomePage extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     debugPrint("HomePage[build]: Building!!");
     return Scaffold(
-      backgroundColor: AppColor.backGroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
@@ -43,7 +41,6 @@ class HomePage extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: Wrap(
-                // runAlignment: WrapAlignment.center,
                 alignment: WrapAlignment.spaceBetween,
                 children: [
                   IconMenuWidget(
@@ -90,12 +87,5 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<void> openUrl(String url) async {
-    final Uri urll = Uri.parse(url);
-    if (!await launchUrl(urll, mode: LaunchMode.externalApplication)) {
-      throw 'Could not launch $url';
-    }
   }
 }

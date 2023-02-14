@@ -20,11 +20,9 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     debugPrint("ProfilePage[build]: Building!!");
-    debugPrint("ProfilePage[build]: currentUser(${widget.currentUser})");
     var sizeWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
@@ -184,7 +182,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   width: double.infinity,
                   height: 40,
                   decoration: BoxDecoration(
-                    // color: Colors.red,
                     borderRadius: BorderRadius.circular(6),
                     border: Border.all(color: Colors.blue),
                   ),

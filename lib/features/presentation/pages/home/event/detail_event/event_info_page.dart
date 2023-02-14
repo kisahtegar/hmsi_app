@@ -54,7 +54,7 @@ class _EventInfoPageState extends State<EventInfoPage> {
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: Column(
           children: [
-            // [Row]: Row of Type event, Date.
+            // [Row]: Row of Type event, Date, modal bottom sheet.
             Row(
               children: [
                 // Type Event
@@ -90,14 +90,17 @@ class _EventInfoPageState extends State<EventInfoPage> {
 
                 // Show modal bottom sheet
                 const Spacer(),
-                GestureDetector(
-                  onTap: () => _showModalBottomSheetOptions(context, event),
-                  child: Icon(
-                    Icons.more_vert,
-                    color: AppColor.primaryColor,
-                    size: size.width * 0.06,
-                  ),
-                ),
+                widget.eventEntity.creatorUid == widget.userEntity.uid
+                    ? GestureDetector(
+                        onTap: () =>
+                            _showModalBottomSheetOptions(context, event),
+                        child: Icon(
+                          Icons.more_vert,
+                          color: AppColor.primaryColor,
+                          size: size.width * 0.06,
+                        ),
+                      )
+                    : const SizedBox(),
               ],
             ),
 
@@ -329,6 +332,24 @@ class _EventInfoPageState extends State<EventInfoPage> {
               ),
               AppSize.sizeVer(9),
               const Divider(thickness: 1),
+
+              // Edit Event button.
+              MoreMenuButtonWidget(
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(
+                    context,
+                    PageConst.editEventPage,
+                    arguments: event,
+                  );
+                },
+                icon: Icons.edit,
+                text: "Edit Event",
+                iconColor: AppColor.primaryColor,
+                textColor: AppColor.primaryColor,
+              ),
+
+              // Delete Event button.
               MoreMenuButtonWidget(
                 onTap: () {
                   _deleteEvent(eventEntity: event);

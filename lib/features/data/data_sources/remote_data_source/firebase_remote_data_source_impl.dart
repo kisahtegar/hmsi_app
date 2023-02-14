@@ -391,11 +391,24 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
             .collection(FirebaseConst.articles)
             .doc(commentEntity.articleId);
 
+        // This will decrement totalComments in article doc.
         articleCollection.get().then((value) {
           if (value.exists) {
             final totalComments = value.get('totalComments');
             articleCollection.update({"totalComments": totalComments - 1});
             return;
+          }
+        });
+
+        // This logic will deleting Collection document reply because if you
+        // delete comment, cannot automatically delete subCollection.
+        commentCollection
+            .doc(commentEntity.commentId)
+            .collection(FirebaseConst.reply)
+            .get()
+            .then((value) {
+          for (var doc in value.docs) {
+            doc.reference.delete();
           }
         });
       });
@@ -692,18 +705,20 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
     Map<String, dynamic> eventInfo = {};
 
-    if (eventEntity.type != "" && eventEntity.type != null) {
-      eventInfo['type'] = eventEntity.type;
-    }
-    // TODO: Need to implement Timestamp!!
-    // if (eventEntity.date != "" && eventEntity.date != null) {
-    //   eventInfo['date'] = eventEntity.date;
-    // }
     if (eventEntity.title != "" && eventEntity.title != null) {
       eventInfo['title'] = eventEntity.title;
     }
     if (eventEntity.description != "" && eventEntity.description != null) {
       eventInfo['description'] = eventEntity.description;
+    }
+    if (eventEntity.date != null) {
+      eventInfo['date'] = eventEntity.date;
+    }
+    if (eventEntity.time != null) {
+      eventInfo['time'] = eventEntity.time;
+    }
+    if (eventEntity.type != "" && eventEntity.type != null) {
+      eventInfo['type'] = eventEntity.type;
     }
     if (eventEntity.location != "" && eventEntity.location != null) {
       eventInfo['location'] = eventEntity.location;

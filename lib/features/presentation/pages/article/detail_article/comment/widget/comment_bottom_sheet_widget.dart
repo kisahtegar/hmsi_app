@@ -261,7 +261,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
     );
   }
 
-  // [Comment Features]
+  // This method will Create new comment.
   _createComment(UserEntity currentUser) {
     BlocProvider.of<CommentCubit>(context)
         .createComment(
@@ -286,6 +286,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
     });
   }
 
+  // This method will Like comment.
   _likeComment({required CommentEntity comment}) {
     BlocProvider.of<CommentCubit>(context).likeComment(
       commentEntity: CommentEntity(
@@ -295,6 +296,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
     );
   }
 
+  // This method will Delete comment
   _deleteComment({required CommentEntity comment}) {
     BlocProvider.of<CommentCubit>(context)
         .deleteComment(
@@ -306,7 +308,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
         .then((_) => Navigator.pop(context));
   }
 
-  // [Reply Features]
+  // This used to Create new reply.
   _createReply(
       {required UserEntity currentUser, required CommentEntity comment}) {
     BlocProvider.of<ReplyCubit>(context)
@@ -332,6 +334,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
     });
   }
 
+  // Showing modal bottom sheet more option for Comment.
   void _showModalBottomSheetMore(
       {required BuildContext context, required CommentEntity comment}) {
     showModalBottomSheet(

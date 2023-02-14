@@ -77,7 +77,6 @@ class _SingleArticleWidgetState extends State<SingleArticleWidget> {
                           width: double.infinity,
                           height: size.height * 0.25,
                           decoration: BoxDecoration(
-                            // color: Colors.red,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: imageBoxWidget(
@@ -98,7 +97,6 @@ class _SingleArticleWidgetState extends State<SingleArticleWidget> {
                 ),
               ),
               AppSize.sizeVer(10),
-              // User Tag
 
               // [BottomSection]: Include Usertag, like button, total like.
               Row(
@@ -140,7 +138,6 @@ class _SingleArticleWidgetState extends State<SingleArticleWidget> {
                       ),
                     ),
                   ),
-
                   const Spacer(),
 
                   // [Text]: Total Likes.
@@ -152,6 +149,7 @@ class _SingleArticleWidgetState extends State<SingleArticleWidget> {
                     ),
                   ),
                   AppSize.sizeHor(5),
+
                   // [Button]: Like Button.
                   InkWell(
                     onTap: _likeArticle,
@@ -174,6 +172,7 @@ class _SingleArticleWidgetState extends State<SingleArticleWidget> {
     );
   }
 
+  // This method for Like Article
   void _likeArticle() {
     BlocProvider.of<ArticleCubit>(context).likeArticle(
       articleEntity: ArticleEntity(

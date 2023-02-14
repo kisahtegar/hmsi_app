@@ -20,12 +20,6 @@ class DetailArticlePage extends StatelessWidget {
         BlocProvider<ArticleCubit>(
           create: (context) => di.sl<ArticleCubit>(),
         ),
-        // BlocProvider<GetSingleArticleCubit>.value(
-        //   value: di.sl<GetSingleArticleCubit>(),
-        // ),
-        // BlocProvider<ArticleCubit>.value(
-        //   value: di.sl<ArticleCubit>(),
-        // ),
       ],
       child: DetailArticleMainWidget(articleId: articleId),
     );
