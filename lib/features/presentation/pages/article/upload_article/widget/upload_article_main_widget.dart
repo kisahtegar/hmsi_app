@@ -192,7 +192,7 @@ class _UploadArticleMainWidgetState extends State<UploadArticleMainWidget> {
       setState(() => _isUploading = true);
       di
           .sl<UploadImageToStorageUseCase>()
-          .call(_image!, false, "articleImages")
+          .call(_image!, true, "articleImages")
           .then((imageUrl) {
         _createSubmitArticle(image: imageUrl);
       });

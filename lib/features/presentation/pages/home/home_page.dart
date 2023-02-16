@@ -69,13 +69,13 @@ class _HomePageState extends State<HomePage> {
                       openUrl("https://www.instagram.com/hmsi.ipem/");
                     },
                   ),
-                  IconMenuWidget(
-                    backgroundColor: Colors.red.withOpacity(0.5),
-                    image: "assets/images/chat.png",
-                    imageSize: 50,
-                    description: "Chat",
-                    onTapListener: () {},
-                  ),
+                  // IconMenuWidget(
+                  //   backgroundColor: Colors.red.withOpacity(0.5),
+                  //   image: "assets/images/chat.png",
+                  //   imageSize: 50,
+                  //   description: "Chat",
+                  //   onTapListener: () {},
+                  // ),
                   IconMenuWidget(
                     backgroundColor: Colors.blue.withOpacity(0.5),
                     image: "assets/images/absensi.png",
@@ -101,6 +101,7 @@ class _HomePageState extends State<HomePage> {
                       );
                     },
                   ),
+                  Container(width: 80),
                   // Container(width: 80) // FakeContainer
                 ],
               ),
