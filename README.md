@@ -15,7 +15,6 @@
       <ul>
         <li>✓ Event Management.</li>
         <li>✓ Article Management.</li>
-        <li>✓ Doctors Selection.</li>
         <li>✓ Admin Management.</li>
         <li>✓ Create Comment Article</li>
         <li>- Getting notification from everywhere.</li>
@@ -35,8 +34,7 @@
       </ul>
     </td>
   </tr>
-</table>b
-
+</table>
 
 ## Mobile Screens
 <p align="center">
