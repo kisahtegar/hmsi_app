@@ -35,20 +35,19 @@
       </ul>
     </td>
   </tr>
-</table>
+</table>b
 
 
 ## Mobile Screens
 <p align="center">
-  <img src="https://raw.githubusercontent.com/kisahtegar/hmsi_app/master/overview/preview.mp4"  width="200" height="400"/>
-  <img src="https://raw.githubusercontent.com/kisahtegar/hmsi_app/master/overview/mobile/1.png"  width="200" height="400"/>
-  <img src="https://raw.githubusercontent.com/kisahtegar/hmsi_app/master/overview/mobile/2.png"  width="200" height="400"/>
-  <img src="https://raw.githubusercontent.com/kisahtegar/hmsi_app/master/overview/mobile/3.png"  width="200" height="400"/>
-  <img src="https://raw.githubusercontent.com/kisahtegar/hmsi_app/master/overview/mobile/4.png"  width="200" height="400"/>
-  <img src="https://raw.githubusercontent.com/kisahtegar/hmsi_app/master/overview/mobile/5.png"  width="200" height="400"/>
-  <img src="https://raw.githubusercontent.com/kisahtegar/hmsi_app/master/overview/mobile/6.png"  width="200" height="400"/>
-  <img src="https://raw.githubusercontent.com/kisahtegar/hmsi_app/master/overview/mobile/7.png"  width="200" height="400"/>
-  <img src="https://raw.githubusercontent.com/kisahtegar/hmsi_app/master/overview/mobile/8.png"  width="200" height="400"/>
+  <img src="https://raw.githubusercontent.com/kisahtegar/hmsi_app/master/overview/mobile/1.jpg"  width="200" height="400"/>
+  <img src="https://raw.githubusercontent.com/kisahtegar/hmsi_app/master/overview/mobile/2.jpg"  width="200" height="400"/>
+  <img src="https://raw.githubusercontent.com/kisahtegar/hmsi_app/master/overview/mobile/3.jpg"  width="200" height="400"/>
+  <img src="https://raw.githubusercontent.com/kisahtegar/hmsi_app/master/overview/mobile/4.jpg"  width="200" height="400"/>
+  <img src="https://raw.githubusercontent.com/kisahtegar/hmsi_app/master/overview/mobile/5.jpg"  width="200" height="400"/>
+  <img src="https://raw.githubusercontent.com/kisahtegar/hmsi_app/master/overview/mobile/6.jpg"  width="200" height="400"/>
+  <img src="https://raw.githubusercontent.com/kisahtegar/hmsi_app/master/overview/mobile/7.jpg"  width="200" height="400"/>
+  <img src="https://raw.githubusercontent.com/kisahtegar/hmsi_app/master/overview/mobile/8.jpg"  width="200" height="400"/>
 </p>
 
 ## About Us
