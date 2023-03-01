@@ -43,6 +43,7 @@ dependencies:
   fluttertoast: ^8.1.2
   font_awesome_flutter: ^10.3.0
   get_it: ^7.2.0
+  http: ^0.13.5
   image_picker: ^0.8.6
   intl: ^0.18.0
   url_launcher: ^6.1.7
@@ -92,7 +93,6 @@ flutter:
           weight: 300
         - asset: assets/fonts/Roboto-Regular.ttf
           weight: 400
-  #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 flutter_native_splash:

@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../const.dart';
+import '../../../../injection_container.dart' as di;
+import '../../cubits/informasi/informasi_cubit.dart';
 import '../../cubits/user/get_single_user/get_single_user_cubit.dart';
 import '../article/article_page.dart';
 import '../home/home_page.dart';
@@ -61,7 +63,10 @@ class _MainScreenState extends State<MainScreen> {
                 controller: pageController,
                 onPageChanged: onPageChanged,
                 children: [
-                  HomePage(currentUser: currentUser),
+                  BlocProvider<InformasiCubit>(
+                    create: (context) => di.sl<InformasiCubit>(),
+                    child: HomePage(currentUser: currentUser),
+                  ),
                   ArticlePage(currentUser: currentUser),
                   const NotificationPage(),
                   ProfilePage(currentUser: currentUser),

@@ -2,11 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:http/http.dart' as http;
 
 import 'features/data/data_sources/remote_data_source/firebase_remote_data_source.dart';
 import 'features/data/data_sources/remote_data_source/firebase_remote_data_source_impl.dart';
+import 'features/data/data_sources/remote_data_source/network_remote_data_source.dart';
 import 'features/data/repositories/firebase_repository_impl.dart';
+import 'features/data/repositories/network_repository_impl.dart';
 import 'features/domain/repositories/firebase_repository.dart';
+import 'features/domain/repositories/network_repository.dart';
 import 'features/domain/usecases/article/create_article_usecase.dart';
 import 'features/domain/usecases/article/delete_article_usecase.dart';
 import 'features/domain/usecases/article/like_article_usecase.dart';
@@ -24,6 +28,7 @@ import 'features/domain/usecases/event/interested_event_usecase.dart';
 import 'features/domain/usecases/event/read_events_usecase.dart';
 import 'features/domain/usecases/event/read_single_event_usecase.dart';
 import 'features/domain/usecases/event/update_event_usecase.dart';
+import 'features/domain/usecases/informasi/fetch_informasi_usecase.dart';
 import 'features/domain/usecases/reply/create_reply_usecase.dart';
 import 'features/domain/usecases/reply/delete_reply_usecase.dart';
 import 'features/domain/usecases/reply/like_reply_usecase.dart';
@@ -47,6 +52,7 @@ import 'features/presentation/cubits/comment/comment_cubit.dart';
 import 'features/presentation/cubits/credential/credential_cubit.dart';
 import 'features/presentation/cubits/event/event_cubit.dart';
 import 'features/presentation/cubits/event/get_single_event/get_single_event_cubit.dart';
+import 'features/presentation/cubits/informasi/informasi_cubit.dart';
 import 'features/presentation/cubits/reply/reply_cubit.dart';
 import 'features/presentation/cubits/user/get_single_other_user/get_single_other_user_cubit.dart';
 import 'features/presentation/cubits/user/get_single_user/get_single_user_cubit.dart';
@@ -147,6 +153,8 @@ Future<void> init() async {
     ),
   );
 
+  sl.registerFactory(() => InformasiCubit(fetchInformasiUsecase: sl.call()));
+
   // !-- Use Cases --!
 
   // user
@@ -226,9 +234,15 @@ Future<void> init() async {
   sl.registerLazySingleton(
       () => InterestedEventUseCase(firebaseRepository: sl.call()));
 
+  // Network
+  sl.registerLazySingleton(
+      () => FetchInformasiUsecase(networkRepository: sl.call()));
+
   // !-- Repository --!
   sl.registerLazySingleton<FirebaseRepository>(
       () => FirebaseRepositoryImpl(firebaseRemoteDataSource: sl.call()));
+  sl.registerLazySingleton<NetworkRepository>(
+      () => NetworkRepositoryImpl(networkRemoteDataSource: sl.call()));
 
   // !-- Remote Data Source --!
   sl.registerLazySingleton<FirebaseRemoteDataSource>(
@@ -238,6 +252,8 @@ Future<void> init() async {
       firebaseStorage: sl.call(),
     ),
   );
+  sl.registerLazySingleton<NetworkRemoteDataSource>(
+      () => NetworkRemoteDataSourceImpl(client: sl.call()));
 
   // !-- External --!
   final firebaseFirestore = FirebaseFirestore.instance;
@@ -247,4 +263,5 @@ Future<void> init() async {
   sl.registerLazySingleton(() => firebaseFirestore);
   sl.registerLazySingleton(() => firebaseAuth);
   sl.registerLazySingleton(() => firebaseStorage);
+  sl.registerLazySingleton(() => http.Client());
 }
