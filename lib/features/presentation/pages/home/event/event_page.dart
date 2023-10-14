@@ -51,11 +51,11 @@ class EventPage extends StatelessWidget {
                         },
                         child: Ink(
                           color: Colors.blue,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 5),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
+                              children: [
                                 Text(
                                   "Create Event",
                                   style: TextStyle(
@@ -90,7 +90,6 @@ class EventPage extends StatelessWidget {
             if (eventState is EventLoaded) {
               return eventState.events.isEmpty
                   ? noPageWidget(
-                      // TODO: NEED TO CHECK SIZING
                       title: "There are no upcoming events.",
                       titleSize: size.width * 0.05,
                       description:

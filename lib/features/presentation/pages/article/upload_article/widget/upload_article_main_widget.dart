@@ -166,7 +166,8 @@ class _UploadArticleMainWidgetState extends State<UploadArticleMainWidget> {
     try {
       final pickedFile =
           // ignore: invalid_use_of_visible_for_testing_member
-          await ImagePicker.platform.getImage(source: ImageSource.gallery);
+          await ImagePicker.platform
+              .getImageFromSource(source: ImageSource.gallery);
 
       setState(() {
         if (pickedFile != null) {

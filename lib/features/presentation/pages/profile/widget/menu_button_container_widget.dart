@@ -15,7 +15,7 @@ class MenuButtonContainerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: borderRadius,
+      borderRadius: borderRadius ?? BorderRadius.zero,
       child: Material(
         child: InkWell(
           onTap: onTap,

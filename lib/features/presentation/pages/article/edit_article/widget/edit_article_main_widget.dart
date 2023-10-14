@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -162,7 +161,8 @@ class _EditArticleMainWidgetState extends State<EditArticleMainWidget> {
     try {
       final pickedFile =
           // ignore: invalid_use_of_visible_for_testing_member
-          await ImagePicker.platform.getImage(source: ImageSource.gallery);
+          await ImagePicker.platform
+              .getImageFromSource(source: ImageSource.gallery);
 
       setState(() {
         if (pickedFile != null) {
